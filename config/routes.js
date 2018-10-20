@@ -34,7 +34,10 @@ module.exports.routes = {
 
   '/': {
     view: 'homepage'
-  }
+  },
+
+
+  '/listadoProveedor': 'ListadoProveedorController.get'
 
   /***************************************************************************
   *                                                                          *

@@ -13,7 +13,9 @@ module.exports = {
 
     descuento : { 
       type: 'float'
-    }
+    },
+
+    tablaListado: { type: 'string' }
   }
 };
 
