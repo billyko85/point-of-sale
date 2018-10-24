@@ -37,7 +37,8 @@ module.exports.routes = {
   },
 
 
-  '/listadoProveedor': 'ListadoProveedorController.get'
+  '/listadoProveedor': 'ListadoProveedorController.get',
+  'post /listadoProveedor/actualizar': 'ListadoProveedorController.updateArticulos'
 
   /***************************************************************************
   *                                                                          *

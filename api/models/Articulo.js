@@ -23,7 +23,9 @@ module.exports = {
       type: 'float'
     },
 
-    proveedor_id : { type: 'integer' }
+    proveedor_id : { type: 'integer' },
+
+    id_ref: { type: 'integer', index: true }
   }
 };
 
