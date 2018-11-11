@@ -13,11 +13,19 @@ module.exports = {
 
     cantidad : { type: 'integer' },
 
+    cantidad_recibida : { type: 'integer' },
+
     articulo_id : { type: 'integer' },
 
     precio : { 
       type: 'float'
     }
+  },
+
+  updateQuantity: (detallePedidos, cantidad) => {
+    detallePedidos.cantidad = cantidad;
+    return detallePedidos.save();
   }
+
 };
 

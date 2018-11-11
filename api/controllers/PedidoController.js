@@ -36,6 +36,44 @@ module.exports = {
     return res.json({
       todo: 'estado() is not implemented yet!'
     });
+  },
+
+  confirmar: function(req, res) {
+    Pedido.findOne(req.body.id)
+      .exec((err, pedido) => {
+
+        if(pedido){
+          let promises = [];
+          const cantidades = req.body.cantidades;
+
+          for(let id in cantidades) {
+
+            const promise = DetallePedidos.findOne(id)
+              .then((detalle) => {
+                if(detalle) {
+                  detalle.cantidad = cantidades[detalle.id];
+                  if(detalle.cantidad > 0)
+                    return Promise.all([detalle.save(), Stock.createFromArticulo(detalle.articulo_id, detalle.cantidad)]);
+                    else return detalle.save();
+                }
+              })
+            
+            promises.push(promise);
+          }
+          
+          pedido.estado = "confirmado";
+          promises.push(pedido.save());
+
+          Promise.all(promises).then(() => {
+            res.send(200);
+          }).catch(e => {console.log(e)});
+    
+        }else {
+          res.send(404);
+        }
+      })
+    
   }
+
 };
 
