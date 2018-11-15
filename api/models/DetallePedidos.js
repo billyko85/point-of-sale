@@ -13,6 +13,8 @@ module.exports = {
 
     cantidad : { type: 'integer' },
 
+    precio_compra: { type: 'float' },
+
     cantidad_recibida : { type: 'integer' },
 
     articulo_id : { type: 'integer' },

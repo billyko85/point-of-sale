@@ -11,7 +11,7 @@ module.exports = {
 
     nombre : { type: 'string' },
 
-    descuento : { 
+    porc_ganancia : { 
       type: 'float'
     },
 

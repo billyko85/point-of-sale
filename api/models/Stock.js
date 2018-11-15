@@ -23,6 +23,10 @@ module.exports = {
 
     precio_venta : { type: 'float' },
 
+    disponible : { type: 'boolean' },
+
+    articulo_id: { type: 'number' },
+
     proveedor_id : { type: 'integer' }
   },
 
@@ -41,8 +45,10 @@ module.exports = {
               fabricante: articulo.fabricante,
               descripcion: articulo.descripcion,
               datos_exra: articulo.datos_extra,
-              precio_venta: articulo.precio, // TODO
-              proveedor_id: articulo.proveedor_id
+              precio_venta: articulo.precio_venta,
+              proveedor_id: articulo.proveedor_id,
+              articulo_id: articulo.id,
+              disponible: true
             })
           );
         

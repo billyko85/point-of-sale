@@ -19,9 +19,11 @@ module.exports = {
 
     datos_extra : { type: 'string' },
 
-    precio : { 
-      type: 'float'
-    },
+    precio : { type: 'float' },
+
+    precio_venta : { type: 'float' },
+
+    actualiza_precio : { type: 'boolean' },
 
     proveedor_id : { type: 'integer' },
 
