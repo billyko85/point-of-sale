@@ -28,6 +28,27 @@ module.exports = {
     proveedor_id : { type: 'integer' },
 
     id_ref: { type: 'integer', index: true }
+  },
+
+  afterUpdate: (updatedRecord, cb) => {
+    Stock.find({"articulo_id": updatedRecord.id})
+      .then((stocks) => {
+        if(stocks.length > 0) {
+          const promises = [];
+          for(let i=0; i<stocks.length; i++) {
+            const stock = stocks[i];
+            stock.precio_venta = updatedRecord.precio_venta;
+            promises.push(stock.save())
+          }
+          return Promise.all(promises);
+        }else {
+          cb();
+        }
+      }).then((err) => {
+        cb();
+      })
+
   }
+
 };
 
