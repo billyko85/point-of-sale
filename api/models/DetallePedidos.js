@@ -11,13 +11,13 @@ module.exports = {
 
     pedido_id : { type: 'integer' },
 
-    cantidad : { type: 'integer' },
-
     precio_compra: { type: 'float' },
 
-    cantidad_recibida : { type: 'integer' },
+    datos_extra: { type: 'string' },
 
     articulo_id : { type: 'integer' },
+
+    recibido : { type: 'boolean' },
 
     precio : { 
       type: 'float'

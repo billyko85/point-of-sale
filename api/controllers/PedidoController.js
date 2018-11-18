@@ -44,17 +44,21 @@ module.exports = {
 
         if(pedido){
           let promises = [];
-          const cantidades = req.body.cantidades;
+          const recibidos = req.body.recibidos;
 
-          for(let id in cantidades) {
-
+          for(let id in recibidos) {
             const promise = DetallePedidos.findOne(id)
               .then((detalle) => {
                 if(detalle) {
-                  detalle.cantidad = cantidades[detalle.id];
-                  if(detalle.cantidad > 0)
-                    return Promise.all([detalle.save(), Stock.createFromArticulo(detalle.articulo_id, detalle.cantidad)]);
-                    else return detalle.save();
+                  detalle.recibido = recibidos[id]
+                  if(recibidos[id]) {
+                    return Promise.all([
+                      detalle.save(),
+                      Stock.createFromArticulo(detalle.articulo_id, detalle.datos_extra)
+                    ]);
+                  }else {
+                    return detalle.save();
+                  }
                 }
               })
             

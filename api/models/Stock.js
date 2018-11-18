@@ -25,34 +25,29 @@ module.exports = {
 
     disponible : { type: 'boolean' },
 
-    articulo_id: { type: 'number' },
+    articulo_id: { type: 'integer' },
 
     proveedor_id : { type: 'integer' }
   },
 
-  createFromArticulo: (articuloId, cantidad) => {
+  createFromArticulo: (articuloId, datosExtra) => {
     
     return Articulo.findOne(articuloId)
       .then((articulo) => {
 
-        const promises = [];
-        for(let i=0; i<cantidad; i++)
-          promises.push(
-            Stock.create({
-              codigo: null, // TODO
-              marca: articulo.marca,
-              modelo: articulo.modelo,
-              fabricante: articulo.fabricante,
-              descripcion: articulo.descripcion,
-              datos_exra: articulo.datos_extra,
-              precio_venta: articulo.precio_venta,
-              proveedor_id: articulo.proveedor_id,
-              articulo_id: articulo.id,
-              disponible: true
-            })
-          );
-        
-        return Promise.all(promises);
+        return Stock.create({
+          codigo: null, // TODO
+          marca: articulo.marca,
+          modelo: articulo.modelo,
+          fabricante: articulo.fabricante,
+          descripcion: articulo.descripcion,
+          datos_extra: datosExtra,
+          precio_venta: articulo.precio_venta,
+          proveedor_id: articulo.proveedor_id,
+          articulo_id: articulo.id,
+          disponible: true
+        });
+
       })
 
   }

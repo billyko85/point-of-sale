@@ -45,6 +45,27 @@ module.exports = {
     return res.json({
       todo: 'precio() is not implemented yet!'
     });
+  },
+
+  create: function(req, res) {
+    
+    const promises = [];
+    for(let i=0; i<req.body.cantidad; i++) {
+      const promise = DetallePedidos.create({
+        pedido_id: req.body.pedido_id,
+        articulo_id: req.body.articulo_id,
+        precio_compra: req.body.precio_compra,
+        datos_extra: req.body.datos_extra
+      })
+      promises.push(promise);
+    }
+
+    Promise.all(promises)
+    .then(() => {
+      res.send(200);
+    })
+
   }
+
 };
 
