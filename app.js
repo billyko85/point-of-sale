@@ -55,7 +55,6 @@ try {
   }
 }
 
-sails.config.orm._hookTimeout = 50000;
 
 // Start server
 sails.lift(rc('sails'));
