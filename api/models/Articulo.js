@@ -19,15 +19,34 @@ module.exports = {
 
     datos_extra : { type: 'string' },
 
-    precio : { type: 'float' },
+    precio : { 
+      type: 'float',
+      required: true,
+      notNull: true
+    },
 
-    precio_venta : { type: 'float' },
+    precio_venta : { 
+      type: 'float',
+      required: true,
+      notNull: true
+    },
 
-    actualiza_precio : { type: 'boolean' },
+    actualiza_precio : { 
+      type: 'boolean',
+      required: true,
+      notNull: true
+    },
 
-    proveedor_id : { type: 'integer' },
+    proveedor_id : { 
+      type: 'integer',
+      required: true,
+      notNull: true 
+    },
 
-    id_ref: { type: 'integer', index: true }
+    id_ref: { 
+      type: 'integer', 
+      index: true 
+    }
   },
 
   afterUpdate: (updatedRecord, cb) => {
