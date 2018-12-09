@@ -10,12 +10,30 @@ module.exports = {
   attributes: {
 
     fecha : {
-      type: 'date'
+      type: 'date',
+      required: true
     },
 
-    proveedor_id : { type: 'integer' },
+    proveedor_id : { 
+      type: 'integer',
+      required: true
+    },
 
-    estado : { type: 'string' }
+    estado : { 
+      type: 'string',
+      required: true
+    }
+    
+  },
+  
+  afterValidate : (pedido, cb) => {
+
+    PedidoService.findPedidoPendienteForProveedor(pedido.proveedor_id)
+    .then((pedidos) => {
+      if(pedidos.length === 0) cb()
+      else cb("Ya hay un pedido pendiente para el proveedor");
+    })
+
   }
 };
 

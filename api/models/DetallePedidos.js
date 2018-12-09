@@ -9,24 +9,41 @@ module.exports = {
 
   attributes: {
 
-    pedido_id : { type: 'integer' },
+    pedido_id : { 
+      type: 'integer'
+    },
 
-    precio_compra: { type: 'float' },
+    precio_compra: { 
+      type: 'float',
+      required: true
+    },
 
     datos_extra: { type: 'string' },
 
-    articulo_id : { type: 'integer' },
+    articulo_id : { 
+      type: 'integer',
+      required: true
+    },
 
-    recibido : { type: 'boolean' },
-
-    precio : { 
-      type: 'float'
-    }
+    recibido : { type: 'boolean' }
+    
   },
 
   updateQuantity: (detallePedidos, cantidad) => {
     detallePedidos.cantidad = cantidad;
     return detallePedidos.save();
+  },
+
+  createMany: (detalle, amount) => {
+
+    const promises = [];
+    for(let i=0; i<amount; i++) {
+      console.log(detalle);
+      const promise = DetallePedidos.create(detalle)
+      promises.push(promise);
+    }
+
+    return Promise.all(promises)
   }
 
 };

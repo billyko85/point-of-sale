@@ -47,23 +47,28 @@ module.exports = {
     });
   },
 
-  create: function(req, res) {
+  create: async (req, res) => {
     
-    const promises = [];
-    for(let i=0; i<req.body.cantidad; i++) {
-      const promise = DetallePedidos.create({
-        pedido_id: req.body.pedido_id,
-        articulo_id: req.body.articulo_id,
-        precio_compra: req.body.precio_compra,
-        datos_extra: req.body.datos_extra
-      })
-      promises.push(promise);
-    }
+    let pedidoId = req.body.pedido_id
 
-    Promise.all(promises)
-    .then(() => {
-      res.send(200);
-    })
+    if(!pedidoId) {
+      const pedidos = await PedidoService.getPedidoForArticulo(req.body.articulo_id)
+      if(pedidos.length === 0) {
+        res.status(404)
+           .send("No hay un pedido pendiente para el proveedor")
+        return
+      }
+      pedidoId = pedidos[0].id
+    }
+    
+    await DetallePedidos.createMany({
+      pedido_id: pedidoId,
+      articulo_id: req.body.articulo_id,
+      precio_compra: req.body.precio_compra,
+      datos_extra: req.body.datos_extra
+    }, req.body.cantidad)
+    
+    res.send(200)
 
   }
 
