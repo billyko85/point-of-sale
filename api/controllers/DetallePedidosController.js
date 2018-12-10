@@ -52,7 +52,7 @@ module.exports = {
     let pedidoId = req.body.pedido_id
 
     if(!pedidoId) {
-      const pedidos = await PedidoService.getPedidoForArticulo(req.body.articulo_id)
+      const pedidos = await PedidoService.getPedidoForArticulo(req.body.articulo_id, req.body.sucursal_id)
       if(pedidos.length === 0) {
         res.status(404)
            .send("No hay un pedido pendiente para el proveedor")

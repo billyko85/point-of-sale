@@ -1,10 +1,11 @@
 module.exports = {
 
-    getPedidoForArticulo: articuloId => Articulo.findOne(articuloId)
-                .then(articulo => PedidoService.findPedidoPendienteForProveedor(articulo.proveedor_id)),
+    getPedidoForArticulo: (articuloId, sucursalId) => Articulo.findOne(articuloId)
+                .then(articulo => PedidoService.findPedidoPendienteForProveedor(articulo.proveedor_id, sucursalId)),
 
-    findPedidoPendienteForProveedor: (proveedorId) => Pedido.find({
+    findPedidoPendienteForProveedor: (proveedorId, sucursalId) => Pedido.find({
         "proveedor_id": proveedorId,
+        "sucursal_id": sucursalId,
         "estado": {"!": ["confirmado"]}
       })
     

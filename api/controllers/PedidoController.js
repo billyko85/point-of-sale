@@ -54,7 +54,7 @@ module.exports = {
                   if(recibidos[id]) {
                     return Promise.all([
                       detalle.save(),
-                      Stock.createFromArticulo(detalle.articulo_id, detalle.datos_extra)
+                      Stock.createFromArticulo(detalle.articulo_id, detalle.datos_extra, pedido.sucursal_id)
                     ]);
                   }else {
                     return detalle.save();

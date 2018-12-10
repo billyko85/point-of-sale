@@ -21,16 +21,18 @@ module.exports = {
 
     datos_extra : { type: 'string' },
 
-    precio_venta : { type: 'float' },
+    precio_venta : { type: 'float', required: true },
 
-    disponible : { type: 'boolean' },
+    disponible : { type: 'boolean', required: true },
 
-    articulo_id: { type: 'integer' },
+    articulo_id: { type: 'integer', required: true },
 
-    proveedor_id : { type: 'integer' }
+    sucursal_id: { type: 'integer', required: true },
+
+    proveedor_id : { type: 'integer', required: true }
   },
 
-  createFromArticulo: (articuloId, datosExtra) => {
+  createFromArticulo: (articuloId, datosExtra, sucursalId) => {
     
     return Articulo.findOne(articuloId)
       .then((articulo) => {
@@ -45,7 +47,8 @@ module.exports = {
           precio_venta: articulo.precio_venta,
           proveedor_id: articulo.proveedor_id,
           articulo_id: articulo.id,
-          disponible: true
+          disponible: true,
+          sucursal_id: sucursalId
         });
 
       })
