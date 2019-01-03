@@ -63,6 +63,8 @@ module.exports = {
           promises.push(promise);
           
           venta.estado = "confirmado";
+          venta.descuento_tipo = req.body.descuento.type;
+          venta.descuento_valor = req.body.descuento.value;
           promises.push(venta.save());
 
           Promise.all(promises).then(() => {

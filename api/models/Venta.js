@@ -13,7 +13,11 @@ module.exports = {
 
     cliente_id : { type: 'string' },
 
-    estado : { type: 'string' }
-  }
+    estado : { type: 'string', required: true},
+
+    descuento_tipo : { type: 'string' },
+
+    descuento_valor : { type: 'float' }
+  },
 };
 

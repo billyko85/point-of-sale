@@ -9,11 +9,32 @@ module.exports = {
 
   attributes: {
 
-    venta_id : { type: 'string' },
+    venta_id : { 
+      type: 'integer',
+      required: true
+    },
 
-    stock_id : { type: 'string' },
+    stock_id : { 
+      type: 'integer',
+      required: true
+    },
 
-    precio_venta : { type: 'string' }
+    precio_venta : { type: 'float' }
+  },
+
+  beforeCreate: (detalle, cb) => {
+
+    if(!detalle.venta_id) {
+      Venta.create({
+        fecha: new Date(),
+        estado: "pendiente"
+      }).then((venta) => {
+        detalle.venta_id = venta.id
+        cb()
+      })
+    }
+
   }
+
 };
 

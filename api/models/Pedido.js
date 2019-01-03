@@ -34,8 +34,8 @@ module.exports = {
   afterValidate : (pedido, cb) => {
 
     PedidoService.findPedidoPendienteForProveedor(pedido.proveedor_id, pedido.sucursal_id)
-    .then((pedidos) => {
-      if(pedidos.length === 0 || pedidos.find((elm) => elm.id === pedido.id)) cb()
+    .then((resp) => {
+      if(resp.pedidos.length === 0 || resp.pedidos.find((elm) => elm.id === pedido.id)) cb()
       else {
         cb("Ya hay un pedido pendiente para el proveedor en esa sucursal")
       }

@@ -38,7 +38,6 @@ module.exports = {
 
     const promises = [];
     for(let i=0; i<amount; i++) {
-      console.log(detalle);
       const promise = DetallePedidos.create(detalle)
       promises.push(promise);
     }
