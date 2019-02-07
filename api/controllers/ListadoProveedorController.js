@@ -32,8 +32,8 @@ module.exports = {
                     WHEN MATCHED THEN   
                         UPDATE SET d.precio = s.precio
                     WHEN NOT MATCHED THEN  
-                        INSERT (id_ref, marca, modelo, fabricante, descripcion, datos_extra, precio, precio_venta, actualiza_precio, proveedor_id)  
-                        VALUES (s.id, s.marca, s.modelo, s.fabricante, s.descripcion, s.datos_extra, s.precio, s.precio, 1, ${proveedor.id});
+                        INSERT (id_ref, marca, modelo, fabricante, categoria, descripcion, datos_extra, precio, precio_venta, actualiza_precio, proveedor_id)  
+                        VALUES (s.id, s.marca, s.modelo, s.fabricante, s.categoria, s.descripcion, s.datos_extra, s.precio, s.precio, 1, ${proveedor.id});
 
                 `
 

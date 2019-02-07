@@ -15,7 +15,11 @@ module.exports = {
 
     fabricante : { type: 'string' },
 
+    categoria : { type: 'string' },
+
     descripcion : { type: 'string' },
+
+    stock_min : { type: 'integer' },
 
     datos_extra : { type: 'string' },
 
