@@ -1,0 +1,100 @@
+{
+  "name": "sails-mssqlserver",
+  "version": "0.14.3",
+  "description": "SQL Server Adapter for Sails / Waterline",
+  "main": "lib/adapter.js",
+  "scripts": {
+    "test": "node test/integration/runner -R spec -b"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/misterGF/sails-mssqlserver.git"
+  },
+  "keywords": [
+    "sails",
+    "sails-mssql",
+    "sails-sqlserver",
+    "sql server",
+    "sqlserver",
+    "microsoft",
+    "azure",
+    "adapter",
+    "waterline",
+    "sails.js",
+    "mssql",
+    "sqlserver",
+    "misterGF"
+  ],
+  "author": {
+    "name": "Travis Webb",
+    "email": "tjwebb@cnectdata.com"
+  },
+  "contributors": [
+    {
+      "name": "balderdashy"
+    },
+    {
+      "name": "Stuart Welham"
+    },
+    {
+      "name": "wxactly"
+    },
+    {
+      "name": "Seich"
+    },
+    {
+      "name": "tjwebb"
+    },
+    {
+      "name": "jaredfromsubway"
+    }
+  ],
+  "license": "MIT",
+  "dependencies": {},
+  "waterlineAdapter": {
+    "type": "sails-mssqlserver",
+    "interfaces": [
+      "semantic",
+      "queryable",
+      "associations"
+    ],
+    "waterlineVersion": "~0.10.0"
+  },
+  "gitHead": "7e3d7e68057792327fc51d5dd4d9500d718b4d6a",
+  "bugs": {
+    "url": "https://github.com/misterGF/sails-mssqlserver/issues"
+  },
+  "homepage": "https://github.com/misterGF/sails-mssqlserver#readme",
+  "bundleDependencies": [
+    "lodash",
+    "mssql",
+    "underscore.string",
+    "waterline-cursor"
+  ],
+  "_id": "sails-mssqlserver@0.12.0",
+  "_shasum": "409ce5ffaae5c0da06cf25586f08cf84276b4de3",
+  "_from": "sails-mssqlserver@>=0.12.0 <0.13.0",
+  "_npmVersion": "2.14.12",
+  "_nodeVersion": "4.2.6",
+  "_npmUser": {
+    "name": "mistergf",
+    "email": "gfgilly@gmail.com"
+  },
+  "dist": {
+    "shasum": "409ce5ffaae5c0da06cf25586f08cf84276b4de3",
+    "tarball": "https://registry.npmjs.org/sails-mssqlserver/-/sails-mssqlserver-0.12.0.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "mistergf",
+      "email": "gfgilly@gmail.com"
+    }
+  ],
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/sails-mssqlserver-0.12.0.tgz_1465328264564_0.09408132312819362"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/sails-mssqlserver/-/sails-mssqlserver-0.12.0.tgz",
+  "readme": "ERROR: No README data found!"
+}

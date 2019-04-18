@@ -39,6 +39,8 @@ module.exports = function findRecords(req, res) {
     return require('sails/lib/hooks/blueprints/actions/findOne')(req, res);
   }
 
+  var queryCount = Model.count().where(actionUtil.parseCriteria(req));
+
   // Lookup for records that match the specified criteria
   var queryData = Model.find()
     .where(actionUtil.parseCriteria(req))
@@ -47,14 +49,13 @@ module.exports = function findRecords(req, res) {
     .sort(actionUtil.parseSort(req));
   queryData = actionUtil.populateRequest(queryData, req);
 
-  var queryCount = Model.count().where(actionUtil.parseCriteria(req));
 
   // Expose header to the client
   res.set('Access-Control-Expose-Headers', 'X-Total-Count');
 
   async.parallel({
-    data: getData,
-    count: getTotalCount
+    count: getTotalCount,
+    data: getData
   }, function (err, results) {
     res.set('X-Total-Count', results.count);
     res.ok(results.data);

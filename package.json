@@ -5,8 +5,10 @@
   "description": "a Sails application",
   "keywords": [],
   "dependencies": {
+    "bunyan": "^1.8.1",
+    "captains-log": "^0.11.11",
     "ejs": "2.3.4",
-    "grunt": "^1.0.3",
+    "grunt": "^1.0.4",
     "grunt-contrib-clean": "1.0.0",
     "grunt-contrib-coffee": "1.0.0",
     "grunt-contrib-concat": "1.0.1",
@@ -19,11 +21,15 @@
     "grunt-sails-linker": "~0.10.1",
     "grunt-sync": "^0.8.0",
     "include-all": "^1.0.0",
+    "lodash": "^3.8.0",
+    "mssql": "^3.3.0",
     "rc": "^1.2.8",
     "sails": "~0.12.14",
     "sails-disk": "~0.10.9",
-    "sails-mssqlserver": "^0.14.3",
-    "skipper": "^0.8.7"
+    "sails-mssqlserver": "api/adapters/sails-mssqlserver",
+    "skipper": "^0.8.7",
+    "underscore.string": "^3.3.5",
+    "waterline-cursor": "0.0.7"
   },
   "scripts": {
     "debug": "node debug app.js",
