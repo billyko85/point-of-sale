@@ -15,6 +15,10 @@ module.exports = {
       type: 'float'
     },
 
+    porc_descuento : { 
+      type: 'float'
+    },
+
     tablaListado: { type: 'string' }
   }
 };

@@ -9,7 +9,7 @@ module.exports = {
 
   attributes: {
 
-    codigo : { type: 'string' },
+    codigo_proveedor : { type: 'string' },
 
     marca : { type: 'string' },
 
@@ -38,7 +38,7 @@ module.exports = {
       .then((articulo) => {
 
         return Stock.create({
-          codigo: null, // TODO
+          codigo_proveedor: articulo.codigo_proveedor,
           marca: articulo.marca,
           modelo: articulo.modelo,
           fabricante: articulo.fabricante,

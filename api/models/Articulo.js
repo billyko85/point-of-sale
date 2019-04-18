@@ -9,6 +9,8 @@ module.exports = {
 
   attributes: {
 
+    codigo_proveedor : { type: 'string' },
+
     marca : { type: 'string' },
 
     modelo : { type: 'string' },
