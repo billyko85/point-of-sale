@@ -18,14 +18,19 @@ module.exports = {
       required: true
     },
 
-    datos_extra: { type: 'string' },
+    atributo_extra: { type: 'string' },
 
     articulo_id : { 
       type: 'integer',
       required: true
     },
 
-    recibido : { type: 'boolean' }
+    cantidad : { 
+      type: 'integer',
+      required: true
+    },
+
+    cantidad_recibida : { type: 'integer' }
     
   },
 

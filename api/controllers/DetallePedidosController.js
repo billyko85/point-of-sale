@@ -49,21 +49,36 @@ module.exports = {
 
   create: async (req, res) => {
     
+    sails.log.info("Creando detalle del pedido.")
+
     let pedidoId = req.body.pedido_id
 
     if(!pedidoId) {
+      sails.log.info("Buscando o creando pedido.")
       const pedido = await PedidoService.getPedidoForArticulo(req.body.articulo_id, req.body.sucursal_id)
       pedidoId = pedido.id
+
     }
-    
-    await DetallePedidos.createMany({
+
+    sails.log.info("findOrCreate detallePedidos")
+    DetallePedidos.findOrCreate({
+      pedido_id: pedidoId,
+      articulo_id: req.body.articulo_id,
+      atributo_extra: req.body.atributo_extra,
+    }, {
       pedido_id: pedidoId,
       articulo_id: req.body.articulo_id,
       precio_compra: req.body.precio_compra,
-      datos_extra: req.body.datos_extra
-    }, req.body.cantidad)
-    
-    res.send(200)
+      atributo_extra: req.body.atributo_extra,
+      cantidad: 0
+    }).then((detalle) => {
+      sails.log.info("Agregando "+ req.body.cantidad +" unidades al detalle del pedido")
+      detalle.cantidad += parseInt(req.body.cantidad)
+      return detalle.save()
+    }).then(() => {
+      sails.log.info("Detalle de pedido creado")
+      res.send(200)
+    })
 
   }
 
