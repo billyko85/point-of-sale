@@ -52,32 +52,48 @@ module.exports = {
     sails.log.info("Creando detalle del pedido.")
 
     let pedidoId = req.body.pedido_id
+    let pedidoPromise = null;
 
     if(!pedidoId) {
-      sails.log.info("Buscando o creando pedido.")
-      const pedido = await PedidoService.getPedidoForArticulo(req.body.articulo_id, req.body.sucursal_id)
-      pedidoId = pedido.id
-
+      pedidoPromise = PedidoService.getPedidoForArticulo(req.body.articulo_id, req.body.sucursal_id)
+    }else {
+      pedidoPromise = Pedido.findOne(pedidoId)
     }
 
-    sails.log.info("findOrCreate detallePedidos")
-    DetallePedidos.findOrCreate({
-      pedido_id: pedidoId,
-      articulo_id: req.body.articulo_id,
-      atributo_extra: req.body.atributo_extra,
-    }, {
-      pedido_id: pedidoId,
-      articulo_id: req.body.articulo_id,
-      precio_compra: req.body.precio_compra,
-      atributo_extra: req.body.atributo_extra,
-      cantidad: 0
-    }).then((detalle) => {
-      sails.log.info("Agregando "+ req.body.cantidad +" unidades al detalle del pedido")
+    sails.log.debug("Buscando pedido")
+    pedidoPromise.then((pedido) => {
+      sails.log.debug("Pedido encontrado, buscando articulo, proveedor y detalle")
+      return Promise.all([
+        Articulo.findOne(req.body.articulo_id),
+        Proveedor.findOne(pedido.proveedor_id),
+        DetallePedidos.findOrCreate({
+          pedido_id: pedido.id,
+          articulo_id: req.body.articulo_id,
+          atributo_extra: req.body.atributo_extra,
+        }, {
+          pedido_id: pedido.id,
+          articulo_id: req.body.articulo_id,
+          precio_compra: 0,
+          atributo_extra: req.body.atributo_extra,
+          cantidad: 0
+        })
+      ])
+    }).then(values => {
+
+      const articulo = values[0]
+      const proveedor = values[1]
+      const detalle = values[2]
+
+      sails.log.debug("Agregando "+ req.body.cantidad +" unidades al detalle del pedido")
       detalle.cantidad += parseInt(req.body.cantidad)
+      detalle.precio_compra = (articulo.precio * (1 - proveedor.porc_descuento / 100)).toFixed(2)
       return detalle.save()
     }).then(() => {
       sails.log.info("Detalle de pedido creado")
       res.send(200)
+    }).catch(reason => {
+      sails.log.error("Error creando un detalle de pedido", reason)
+      res.send(500)
     })
 
   }
