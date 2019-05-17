@@ -6,77 +6,19 @@
  */
 
 module.exports = {
-	
-
-
-  /**
-   * `PedidoController.fecha()`
-   */
-  fecha: function (req, res) {
-    return res.json({
-      todo: 'fecha() is not implemented yet!'
-    });
-  },
-
-
-  /**
-   * `PedidoController.proveedor_id()`
-   */
-  proveedor_id: function (req, res) {
-    return res.json({
-      todo: 'proveedor_id() is not implemented yet!'
-    });
-  },
-
-
-  /**
-   * `PedidoController.estado()`
-   */
-  estado: function (req, res) {
-    return res.json({
-      todo: 'estado() is not implemented yet!'
-    });
-  },
 
   confirmar: function(req, res) {
-    Pedido.findOne(req.body.id)
-      .exec((err, pedido) => {
 
-        if(pedido){
-          let promises = [];
-          const recibidos = req.body.recibidos;
+    sails.log.info(`Confirmando pedido ${req.body.id}`)
 
-          for(let id in recibidos) {
-            const promise = DetallePedidos.findOne(id)
-              .then((detalle) => {
-                if(detalle) {
-                  detalle.recibido = recibidos[id]
-                  if(recibidos[id]) {
-                    return Promise.all([
-                      detalle.save(),
-                      Stock.createFromArticulo(detalle.articulo_id, detalle.datos_extra, pedido.sucursal_id)
-                    ]);
-                  }else {
-                    return detalle.save();
-                  }
-                }
-              })
-            
-            promises.push(promise);
-          }
-          
-          pedido.estado = "confirmado";
-          promises.push(pedido.save());
-
-          Promise.all(promises).then(() => {
-            res.send(200);
-          }).catch(e => {console.log(e)});
-    
-        }else {
-          res.send(404);
-        }
+    PedidoService.confirmPedido(req.body.id, req.body.recibidos)
+      .then(() => {
+        sails.log.info(`Pedido confirmado ${req.body.id}`)
+        res.status(200).send()
+      }).catch((error) => {
+        sails.log.error(`Error confirmando pedido ${req.body.id}`, error)
+        res.status(500).send(error)
       })
-    
   }
 
 };

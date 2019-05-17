@@ -21,18 +21,22 @@ module.exports = {
 
     datos_extra : { type: 'string' },
 
+    atributo_extra : { type: 'string' },
+
     precio_venta : { type: 'float', required: true },
 
     disponible : { type: 'boolean', required: true },
 
-    articulo_id: { type: 'integer', required: true },
+    articulo_id : { type: 'integer', required: true },
 
-    sucursal_id: { type: 'integer', required: true },
+    pedido_id : { type: 'integer', required: true },
+
+    sucursal_id : { type: 'integer', required: true },
 
     proveedor_id : { type: 'integer', required: true }
   },
 
-  createFromArticulo: (articuloId, datosExtra, sucursalId) => {
+  createFromArticulo: (articuloId, pedidoId, atributoExtra, sucursalId) => {
     
     return Articulo.findOne(articuloId)
       .then((articulo) => {
@@ -43,10 +47,12 @@ module.exports = {
           modelo: articulo.modelo,
           fabricante: articulo.fabricante,
           descripcion: articulo.descripcion,
-          datos_extra: datosExtra,
+          datos_extra: articulo.datos_extra,
+          atributo_extra: atributoExtra,
           precio_venta: articulo.precio_venta,
           proveedor_id: articulo.proveedor_id,
           articulo_id: articulo.id,
+          pedido_id: pedidoId,
           disponible: true,
           sucursal_id: sucursalId
         });
