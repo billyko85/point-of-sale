@@ -11,13 +11,25 @@ module.exports = {
 
     fecha : { type: 'string' },
 
-    cliente_id : { type: 'string' },
+    cliente_id : { type: 'integer' },
 
     estado : { type: 'string', required: true},
 
     descuento_tipo : { type: 'string' },
 
-    descuento_valor : { type: 'float' }
+    descuento_valor : { type: 'float' },
+
+    mediopago_id : { type: 'integer' },
+
+    recargo : { type: 'float' }
+
   },
+
+  afterDestroy: (destroyedRecords, cb) => {
+    Promise.all(
+      destroyedRecords.map(destroyedRecord => DetalleVenta.destroy({venta_id: destroyedRecord.id}))
+    ).then(() => cb())
+  }
+
 };
 

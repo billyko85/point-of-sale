@@ -44,27 +44,26 @@ module.exports = {
     Venta.findOne(req.body.id)
       .exec((err, venta) => {
 
-        if(venta){
+        if(venta && venta.estado !== "confirmado"){
           let promises = [];
 
           const promise = DetalleVenta.find({"venta_id": venta.id})
-          .then((detalles) => {
-
-            const detallePromises = [];
-            for(ix in detalles) {
-              const detalle = detalles[ix]
-              detalle.disponible = false
-              detallePromises.push(detalle.save());
-            }
-            
-            return Promise.all(detallePromises);
-          })
+          .then(detalles => Promise.all(
+            detalles.map(detalle => Stock.findOne(detalle.stock_id))
+          )).then(stocks => Promise.all(
+            stocks.map(stock => {
+              stock.disponible = false;
+              return stock.save()
+            })
+          ))
           
           promises.push(promise);
           
           venta.estado = "confirmado";
           venta.descuento_tipo = req.body.descuento.type;
           venta.descuento_valor = req.body.descuento.value;
+          venta.mediopago_id = req.body.medioPago;
+          venta.recargo = req.body.recargo;
           promises.push(venta.save());
 
           Promise.all(promises).then(() => {

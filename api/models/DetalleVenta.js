@@ -11,7 +11,6 @@ module.exports = {
 
     venta_id : { 
       type: 'integer',
-      required: true
     },
 
     stock_id : { 
@@ -22,17 +21,36 @@ module.exports = {
     precio_venta : { type: 'float' }
   },
 
-  beforeCreate: (detalle, cb) => {
+  beforeCreate: (values, cb) => {
 
-    if(!detalle.venta_id) {
-      Venta.create({
-        fecha: new Date(),
-        estado: "pendiente"
-      }).then((venta) => {
-        detalle.venta_id = venta.id
-        cb()
-      })
-    }
+    Promise.all([
+      Venta.findOne(values.venta_id),
+      Stock.findOne(values.stock_id),
+      DetalleVenta.find({ stock_id: values.stock_id })
+    ]).then(values => {
+      const venta = values[0]
+      const stock = values[1]
+      const detalles = values[2]
+
+      if(!venta || venta.estado === "confirmado") {
+        cb("La venta no existe o ya se encuentra confirmada.")
+        return
+      }
+      if(!stock || !stock.disponible) {
+        cb("El artículo ya no está disponible para la venta.")
+        return
+      }
+      if(detalles.length !== 0) {
+        cb("El artículo ya fue agregado a otra venta.")
+        return
+      }
+      
+      cb()
+
+    }).catch(e => {
+      sails.log.error("Error validando el detalle de venta", e)
+      cb("Ha ocurrido un error inesperado.")
+    })
 
   }
 
