@@ -9,7 +9,7 @@ module.exports = {
 
   attributes: {
 
-    fecha : { type: 'string' },
+    fecha : { type: 'date' },
 
     cliente_id : { type: 'integer' },
 
@@ -21,7 +21,11 @@ module.exports = {
 
     mediopago_id : { type: 'integer' },
 
-    recargo : { type: 'float' }
+    recargo : { type: 'float' },
+
+    total_bruto : { type: 'float' },
+
+    total_neto : { type: 'float' }
 
   },
 
@@ -29,6 +33,18 @@ module.exports = {
     Promise.all(
       destroyedRecords.map(destroyedRecord => DetalleVenta.destroy({venta_id: destroyedRecord.id}))
     ).then(() => cb())
+  },
+
+  calcularTotalNeto: (totalBruto, descuentoTipo, descuentoValor, recargo) => {
+    let newTotal = totalBruto
+    if(descuentoTipo === "%")
+        newTotal = newTotal * (1 - descuentoValor / 100)
+    else if(descuentoTipo === "$")
+        newTotal = newTotal - descuentoValor
+    
+    newTotal += recargo * newTotal / 100
+    
+    return newTotal
   }
 
 };
