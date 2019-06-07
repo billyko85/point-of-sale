@@ -686,8 +686,9 @@ module.exports = (function () {
   }
 
   function getSchemaName (connection, collection) {
+    var defaultSchema = connections[connection].config.defaultSchema ? connections[connection].config.defaultSchema : 'dbo'
     var collectionObject = connections[connection].collections[collection]
-    return collectionObject.meta && collectionObject.meta.schemaName ? collectionObject.meta.schemaName : 'dbo'
+    return collectionObject.meta && collectionObject.meta.schemaName ? collectionObject.meta.schemaName : defaultSchema
   }
 
   return adapter

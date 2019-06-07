@@ -165,6 +165,7 @@ utils.buildSelectStatement = function (criteria, table) {
 
     // Add FROM clause
     query += 'FROM ' + table
+    
     return query
   }
 
