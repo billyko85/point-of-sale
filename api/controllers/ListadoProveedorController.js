@@ -30,7 +30,7 @@ module.exports = {
                     USING (
                         ${proveedor.tablaListado}
                     ) as s 
-                    ON (d.id_ref = s.id)  
+                    ON (d.id_ref = s.id and d.proveedor_id = ${proveedor.id})  
                     WHEN MATCHED THEN   
                         UPDATE SET 
                             d.codigo_proveedor = s.codigo_proveedor,
