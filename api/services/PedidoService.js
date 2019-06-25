@@ -39,9 +39,10 @@ module.exports = {
       for(let i in detalles) {
         const detalle = detalles[i]
         detalle.cantidad_recibida = recibidos[detalle.id] >= 0 ? recibidos[detalle.id] : detalle.cantidad
+        sails.log.info(`Detalle ${detalle.id} recibidos: ${detalle.cantidad_recibida}`)
         updatePromises.push(detalle.save())
         
-        for(let j=0; j<detalle.recibido; j++) 
+        for(let j=0; j<detalle.cantidad_recibida; j++) 
           updatePromises.push(Stock.createFromArticulo(detalle.articulo_id, pedido.id, detalle.atributo_extra, pedido.sucursal_id))
       }
 
