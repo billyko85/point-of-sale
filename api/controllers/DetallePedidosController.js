@@ -49,7 +49,7 @@ module.exports = {
 
   create: async (req, res) => {
     
-    sails.log.info("Creando detalle del pedido.")
+    LogService.info("Creando detalle del pedido.")
 
     let pedidoId = req.body.pedido_id
     let pedidoPromise = null;
@@ -60,9 +60,9 @@ module.exports = {
       pedidoPromise = Pedido.findOne(pedidoId)
     }
 
-    sails.log.debug("Buscando pedido")
+    LogService.debug("Buscando pedido")
     pedidoPromise.then((pedido) => {
-      sails.log.debug("Pedido encontrado, buscando articulo, proveedor y detalle")
+      LogService.debug("Pedido encontrado, buscando articulo, proveedor y detalle")
       return Promise.all([
         Articulo.findOne(req.body.articulo_id),
         Proveedor.findOne(pedido.proveedor_id),
@@ -84,15 +84,15 @@ module.exports = {
       const proveedor = values[1]
       const detalle = values[2]
 
-      sails.log.debug("Agregando "+ req.body.cantidad +" unidades al detalle del pedido")
+      LogService.debug("Agregando "+ req.body.cantidad +" unidades al detalle del pedido")
       detalle.cantidad += parseInt(req.body.cantidad)
       detalle.precio_compra = (articulo.precio * (1 - proveedor.porc_descuento / 100)).toFixed(2)
       return detalle.save()
     }).then(() => {
-      sails.log.info("Detalle de pedido creado")
+      LogService.info("Detalle de pedido creado")
       res.send(200)
     }).catch(reason => {
-      sails.log.error("Error creando un detalle de pedido", reason)
+      LogService.error("Error creando un detalle de pedido", reason)
       res.send(500)
     })
 

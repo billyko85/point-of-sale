@@ -21,10 +21,13 @@ module.exports = {
     },
 
     updateArticulos: (req, res) => {
+        req.setTimeout(600 * 1000) // Increase the request timeout to 5 minutes
+        LogService.info(`Obteniendo listado de proveedor ${req.body.proveedor}`)
         Proveedor.findOne(req.body.proveedor)
         .exec((err, proveedor) => {
             if(proveedor) {
 
+                LogService.info(`Actualizando precios del proveedor ${req.body.proveedor}`)
                 const query = `
                     MERGE articulo d
                     USING (
@@ -39,44 +42,41 @@ module.exports = {
                             d.fabricante = s.fabricante,
                             d.categoria = s.categoria,
                             d.descripcion = s.descripcion,
-                            d.precio = s.precio
+                            d.precio = s.precio,
+                            d.precio_venta = CASE WHEN d.actualiza_precio = 1 THEN round(s.precio * (1 + ${proveedor.porc_ganancia} / 100), 2) ELSE d.precio_venta END
                     WHEN NOT MATCHED THEN  
                         INSERT (id_ref, codigo_proveedor, marca, modelo, fabricante, categoria, descripcion, datos_extra, precio, precio_venta, actualiza_precio, proveedor_id)  
-                        VALUES (s.id, s.codigo_proveedor, s.marca, s.modelo, s.fabricante, s.categoria, s.descripcion, s.datos_extra, s.precio, s.precio, 1, ${proveedor.id});
+                        VALUES (s.id, s.codigo_proveedor, s.marca, s.modelo, s.fabricante, s.categoria, s.descripcion, s.datos_extra, s.precio, round(s.precio * (1 + ${proveedor.porc_ganancia} / 100), 2), 1, ${proveedor.id});
 
                 `
 
                 Proveedor.query(query, [], (err) => {
                     if(err === null) {
 
+                        LogService.info(`Actualizando precios de stock del proveedor ${req.body.proveedor}`)
                         const query = `
-                            UPDATE articulo
-                            SET precio_venta = (
-                                SELECT CASE WHEN articulo.actualiza_precio = 1 THEN round(articulo.precio * (1 + p.porc_ganancia / 100), 2) ELSE articulo.precio_venta END
-                                FROM proveedor p
-                                WHERE p.id = articulo.proveedor_id
-                            )
-                            WHERE proveedor_id = ${proveedor.id};
                             UPDATE stock
                             SET precio_venta = (SELECT a.precio_venta from articulo a where a.id = stock.articulo_id)
                             WHERE proveedor_id = ${proveedor.id};
                         `
                         Proveedor.query(query, [], (err) => {
                             if(err) {
-                                console.log(err);
-                                res.send(500);
+                                LogService.error(`Error actualizando precios de stock del proveedor ${req.body.proveedor}`, err)
+                                res.status(500).send(`Error actualizando info del proveedor`);
                             }else {
-                                res.send(200);
+                                LogService.info(`Actualización finalizada de proveedor ${req.body.proveedor}`)
+                                res.status(200).send();
                             }
                         });
 
                     }else {
-                        console.log(err);
-                        res.send(500);
+                        LogService.error(`Error actualizando precios del proveedor ${req.body.proveedor}`, err)
+                        res.status(500).send(`Error actualizando info del proveedor`);
                     }
                 })
             }else {
-                res.send(404);
+                LogService.error(`Proveedor no encontrado ${req.body.proveedor}`)
+                res.status(404).send(`Proveedor no encontrado`);
             }
         })
 

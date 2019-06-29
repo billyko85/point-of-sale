@@ -48,7 +48,7 @@ module.exports = {
       cb()
 
     }).catch(e => {
-      sails.log.error("Error validando el detalle de venta", e)
+      LogService.error("Error validando el detalle de venta", e)
       cb("Ha ocurrido un error inesperado.")
     })
 

@@ -78,7 +78,7 @@ module.exports = (function () {
       schema: true,
 
       connectionTimeout: 60 * 1000,
-      requestTimeout: 300 * 1000,
+      requestTimeout: 600 * 1000,
       persistent: false,
 
       options: {
