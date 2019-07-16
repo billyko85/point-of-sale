@@ -28,6 +28,8 @@ module.exports = {
             if(proveedor) {
 
                 LogService.info(`Actualizando precios del proveedor ${req.body.proveedor}`)
+                const porcSellPrice = PriceService.calculateSellPrice(1, proveedor.porc_descuento, proveedor.porc_ganancia)
+                
                 const query = `
                     MERGE articulo d
                     USING (
@@ -43,10 +45,10 @@ module.exports = {
                             d.categoria = s.categoria,
                             d.descripcion = s.descripcion,
                             d.precio = s.precio,
-                            d.precio_venta = CASE WHEN d.actualiza_precio = 1 THEN round(s.precio * (1 + ${proveedor.porc_ganancia} / 100), 2) ELSE d.precio_venta END
+                            d.precio_venta = CASE WHEN d.actualiza_precio = 1 THEN round(s.precio * ${porcSellPrice}, 2) ELSE d.precio_venta END
                     WHEN NOT MATCHED THEN  
                         INSERT (id_ref, codigo_proveedor, marca, modelo, fabricante, categoria, descripcion, datos_extra, precio, precio_venta, actualiza_precio, proveedor_id)  
-                        VALUES (s.id, s.codigo_proveedor, s.marca, s.modelo, s.fabricante, s.categoria, s.descripcion, s.datos_extra, s.precio, round(s.precio * (1 + ${proveedor.porc_ganancia} / 100), 2), 1, ${proveedor.id});
+                        VALUES (s.id, s.codigo_proveedor, s.marca, s.modelo, s.fabricante, s.categoria, s.descripcion, s.datos_extra, s.precio, round(s.precio * ${porcSellPrice}, 2), 1, ${proveedor.id});
 
                 `
 
