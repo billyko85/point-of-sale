@@ -92,7 +92,7 @@ utils.buildCountStatement = function (table, options) {
 utils.buildSelectStatement = function (criteria, table) {
   var query = 'SELECT '
 
-  if (criteria.select || criteria.groupBy || criteria.sum || criteria.average || criteria.min || criteria.max) {
+  if (criteria.select || criteria.count || criteria.groupBy || criteria.sum || criteria.average || criteria.min || criteria.max) {
     // Select only certain columns
     if (criteria.select) {
       if (criteria.select instanceof Array) {
@@ -124,6 +124,17 @@ utils.buildSelectStatement = function (criteria, table) {
           })
         } else {
           query += 'SUM([' + criteria.sum + ']) AS [' + criteria.sum + '], '
+        }
+      }
+
+      // Handle COUNT
+      if (criteria.count) {
+        if (criteria.count instanceof Array) {
+          criteria.count.forEach(function (opt) {
+            query += 'COUNT([' + opt + ']) AS [' + opt + '_count], '
+          })
+        } else {
+          query += 'COUNT([' + criteria.count + ']) AS [' + criteria.count + '_count], '
         }
       }
 

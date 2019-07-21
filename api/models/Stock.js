@@ -5,6 +5,12 @@
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
+const groupDistinct = (arr, field) => 
+  arr.map(value => value[field])
+     .filter((value, ix, self) => self.indexOf(value) === ix)
+     .join(",")
+
+
 module.exports = {
 
   attributes: {
@@ -39,25 +45,30 @@ module.exports = {
   createFromArticulo: (articuloId, pedidoId, atributoExtra, sucursalId) => {
     
     return Articulo.findOne(articuloId)
-      .then((articulo) => {
-
-        return Stock.create({
+      .then(articulo => Articulo.find({
           codigo_proveedor: articulo.codigo_proveedor,
           marca: articulo.marca,
-          modelo: articulo.modelo,
           fabricante: articulo.fabricante,
-          descripcion: articulo.descripcion,
-          datos_extra: articulo.datos_extra,
-          atributo_extra: atributoExtra,
-          precio_venta: articulo.precio_venta,
-          proveedor_id: articulo.proveedor_id,
-          articulo_id: articulo.id,
-          pedido_id: pedidoId,
-          disponible: true,
-          sucursal_id: sucursalId
-        });
+          precio_venta: articulo.precio_venta
+        }).then(articulos => {
 
-      })
+          return Stock.create({
+            codigo_proveedor: articulo.codigo_proveedor,
+            marca: articulo.marca,
+            modelo: groupDistinct(articulos, "modelo"),
+            fabricante: articulo.fabricante,
+            descripcion: articulo.descripcion,
+            datos_extra: articulo.datos_extra,
+            atributo_extra: atributoExtra,
+            precio_venta: articulo.precio_venta,
+            proveedor_id: articulo.proveedor_id,
+            articulo_id: articulo.id,
+            pedido_id: pedidoId,
+            disponible: true,
+            sucursal_id: sucursalId
+          })
+        })
+      );
 
   }
 

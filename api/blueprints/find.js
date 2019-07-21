@@ -7,6 +7,18 @@ var actionUtil = require('sails/lib/hooks/blueprints/actionUtil'),
   _ = sails.lodash;
 var async = require('sails/node_modules/async');
 
+var parseReqParam = (req, param) => {
+  var reqParam = req.param(param) || req.options[param];
+  if (!reqParam) {return undefined;}
+
+  // If `reqParam` is a string, attempt to split it.
+  // (e.g. `field1,field2`)
+  if (typeof reqParam === "string") {
+    reqParam = reqParam.split(',')
+  }
+  return reqParam;
+}
+
 /**
  * Find Records
  *
@@ -41,12 +53,22 @@ module.exports = function findRecords(req, res) {
 
   var queryCount = Model.count().where(actionUtil.parseCriteria(req));
 
+  var options = {}
+  var count = parseReqParam(req, "count")
+  var max = parseReqParam(req, "max")
+  if(count) options.count = count
+  if(max) options.max = max
+
   // Lookup for records that match the specified criteria
-  var queryData = Model.find()
+  var queryData = Model.find({},options)
     .where(actionUtil.parseCriteria(req))
     .limit(actionUtil.parseLimit(req))
     .skip(actionUtil.parseSkip(req))
     .sort(actionUtil.parseSort(req));
+  
+  var groupBy = parseReqParam(req, "groupBy")
+  if(groupBy) queryData = queryData.groupBy(groupBy);
+
   queryData = actionUtil.populateRequest(queryData, req);
 
 

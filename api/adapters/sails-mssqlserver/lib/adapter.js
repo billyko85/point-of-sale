@@ -317,12 +317,7 @@ module.exports = (function () {
      *
      */
     find: function (connection, collection, options, cb) {
-      // Check if this is an aggregate query and that there is something to return
-      if (options.groupBy || options.sum || options.average || options.min || options.max) {
-        if (!options.sum && !options.average && !options.min && !options.max) {
-          return cb(new Error('Cannot groupBy without a calculation'))
-        }
-      }
+      console.log(options);
 
       options.__primaryKey__ = adapter.getPrimaryKey(connection, collection)
       var schemaName = getSchemaName(connection, collection)
