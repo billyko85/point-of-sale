@@ -41,9 +41,7 @@ module.exports = {
         detalle.cantidad_recibida = recibidos[detalle.id] >= 0 ? recibidos[detalle.id] : detalle.cantidad
         LogService.info(`Detalle ${detalle.id} recibidos: ${detalle.cantidad_recibida}`)
         updatePromises.push(detalle.save())
-        
-        for(let j=0; j<detalle.cantidad_recibida; j++) 
-          updatePromises.push(Stock.createFromArticulo(detalle.articulo_id, pedido.id, detalle.atributo_extra, pedido.sucursal_id))
+        updatePromises.push(Stock.createNFromArticulo(detalle.cantidad_recibida, detalle.articulo_id, pedido.id, detalle.atributo_extra, pedido.sucursal_id))
       }
 
       pedido.estado = "confirmado";

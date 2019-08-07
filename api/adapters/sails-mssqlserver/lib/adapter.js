@@ -317,7 +317,6 @@ module.exports = (function () {
      *
      */
     find: function (connection, collection, options, cb) {
-      console.log(options);
 
       options.__primaryKey__ = adapter.getPrimaryKey(connection, collection)
       var schemaName = getSchemaName(connection, collection)

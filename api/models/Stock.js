@@ -42,20 +42,16 @@ module.exports = {
     proveedor_id : { type: 'integer', required: true }
   },
 
-  createFromArticulo: (articuloId, pedidoId, atributoExtra, sucursalId) => {
+  createNFromArticulo: (cantidadRecibida, articuloId, pedidoId, atributoExtra, sucursalId) => {
     
     return Articulo.findOne(articuloId)
-      .then(articulo => Articulo.find({
-          codigo_proveedor: articulo.codigo_proveedor,
-          marca: articulo.marca,
-          fabricante: articulo.fabricante,
-          precio_venta: articulo.precio_venta
-        }).then(articulos => {
-
-          return Stock.create({
+      .then(articulo => {
+        const promises = []
+        for(let i=0;i<cantidadRecibida;i++)
+          promises.push(Stock.create({
             codigo_proveedor: articulo.codigo_proveedor,
             marca: articulo.marca,
-            modelo: groupDistinct(articulos, "modelo"),
+            modelo: articulo.modelo,
             fabricante: articulo.fabricante,
             descripcion: articulo.descripcion,
             datos_extra: articulo.datos_extra,
@@ -66,9 +62,10 @@ module.exports = {
             pedido_id: pedidoId,
             disponible: true,
             sucursal_id: sucursalId
-          })
-        })
-      );
+          }))
+        
+        Promise.all(promises)
+      });
 
   }
 
