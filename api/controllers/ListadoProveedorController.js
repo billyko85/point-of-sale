@@ -7,7 +7,7 @@ module.exports = {
         Proveedor.findOne(where.proveedor_id)
         .exec((err, proveedor) => {
             if(proveedor) {
-                const query = proveedor.tablaListado.replace(/^select *(distinct)?/i, (str, distinct) => `SELECT ${distinct || ""} TOP 15`);
+                const query = proveedor.tablaListado.trim().replace(/^select *(distinct)?/i, (str, distinct) => `SELECT ${distinct || ""} TOP 15`);
                 Proveedor.query(query, [], (err, rawResult) => {
                     res.setHeader('Content-Type', 'application/json');
                     res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count');
