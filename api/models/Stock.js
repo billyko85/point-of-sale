@@ -10,6 +10,31 @@ const groupDistinct = (arr, field) =>
      .filter((value, ix, self) => self.indexOf(value) === ix)
      .join(",")
 
+const clearNullValue = value => value == null ? `null` : `'${clearValue(value)}'`
+const clearValue = (str) => {
+  return str.replace(/[\0\x08\x09\x1a\n\r"'\\\%]/g, function (char) {
+      switch (char) {
+          case "\0":
+              return "\\0";
+          case "\x08":
+              return "\\b";
+          case "\x09":
+              return "\\t";
+          case "\x1a":
+              return "\\z";
+          case "\n":
+              return "\\n";
+          case "\r":
+              return "\\r";
+          case "\"":
+          case "'":
+          case "\\":
+          case "%":
+              return "\\"+char; // prepends a backslash to backslash, percent,
+                                // and double/single quotes
+      }
+  });
+}
 
 module.exports = {
 
@@ -42,30 +67,45 @@ module.exports = {
     proveedor_id : { type: 'integer', required: true }
   },
 
-  createNFromArticulo: (cantidadRecibida, articuloId, pedidoId, atributoExtra, sucursalId) => {
+  createNFromArticulo: (cantidadRecibida, articulo, pedidoId, atributoExtra, sucursalId) => {
     
-    return Articulo.findOne(articuloId)
-      .then(articulo => {
-        const promises = []
-        for(let i=0;i<cantidadRecibida;i++)
-          promises.push(Stock.create({
-            codigo_proveedor: articulo.codigo_proveedor,
-            marca: articulo.marca,
-            modelo: articulo.modelo,
-            fabricante: articulo.fabricante,
-            descripcion: articulo.descripcion,
-            datos_extra: articulo.datos_extra,
-            atributo_extra: atributoExtra,
-            precio_venta: articulo.precio_venta,
-            proveedor_id: articulo.proveedor_id,
-            articulo_id: articulo.id,
-            pedido_id: pedidoId,
-            disponible: true,
-            sucursal_id: sucursalId
-          }))
-        
-        Promise.all(promises)
-      });
+    const stocks = []
+    for(let i=0;i<cantidadRecibida;i++)
+      stocks.push(`INSERT INTO stock (
+        codigo_proveedor,
+        marca,
+        modelo,
+        fabricante,
+        descripcion,
+        datos_extra,
+        atributo_extra,
+        precio_venta,
+        proveedor_id,
+        articulo_id,
+        pedido_id,
+        disponible,
+        sucursal_id,
+        createdAt,
+        updatedAt
+      ) values (
+        ${clearNullValue(articulo.codigo_proveedor)},
+        ${clearNullValue(articulo.marca)},
+        ${clearNullValue(articulo.modelo)},
+        ${clearNullValue(articulo.fabricante)},
+        ${clearNullValue(articulo.descripcion)},
+        ${clearNullValue(articulo.datos_extra)},
+        ${clearNullValue(atributoExtra)},
+        ${articulo.precio_venta},
+        ${articulo.proveedor_id},
+        ${articulo.id},
+        ${pedidoId},
+        1,
+        ${sucursalId},
+        SYSDATETIME(),
+        SYSDATETIME()
+      )`)
+    
+    return stocks.join("; ")
 
   }
 

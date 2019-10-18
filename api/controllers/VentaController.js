@@ -62,41 +62,58 @@ module.exports = {
 
             for(let i=0; i<detalles.length; i++) {
               const detalle = detalles[i]
-              const stockId = req.body.stockIds[detalle.id]
+              const stockId = parseInt(req.body.stockIds[detalle.id])
               if(!stockId) throw "Falta ingresar los ids de las posiciones"
 
-              const sIx = stocks.findIndex(stock => stock.id = stockId)
+              const sIx = stocks.findIndex(stock => stock.id === stockId)
               if(sIx < 0) throw `No existe el stock con Id ${stockId}`
 
               const stock = stocks[sIx]
-              console.log(stock, detalle);
-              if(stock.codigo_proveedor != detalle.codigo_proveedor) throw `El id ${stockId} no corresponde con el código ${detalle.codigo_proveedor}`
+
+              if(stock.codigo_proveedor !== detalle.codigo_proveedor) throw `El id ${stockId} no corresponde con el código ${detalle.codigo_proveedor}`
               if(!stock.disponible) throw `El stock id ${stockId} no está disponible para la venta`
 
               detalle.stock_id = stockId
               totalBruto += detalle.precio_venta
             }
 
-            LogService.info(`Venta: ${venta.id} - actualizando venta`)
+            const totalNeto = Venta.calcularTotalNeto(venta.total_bruto, req.body.descuento.type, req.body.descuento.value, req.body.recargo)
 
-            venta.estado = "confirmado";
-            venta.descuento_tipo = req.body.descuento.type;
-            venta.descuento_valor = req.body.descuento.value;
-            venta.mediopago_id = req.body.medioPago;
-            venta.recargo = req.body.recargo;
-            venta.total_bruto = totalBruto;
-            venta.total_neto = Venta.calcularTotalNeto(venta.total_bruto, venta.descuento_tipo, venta.descuento_valor, venta.recargo)
+            LogService.info(`Venta: ${venta.id} - actualizando datos en db`)
 
-            LogService.info(`Venta: ${venta.id} - actualizando en db`)
+            let sql = "SET xact_abort on; BEGIN TRANSACTION;"
+            sql += detalles.map(d => `UPDATE detalleVenta
+                                      SET stock_id = ${d.stock_id}
+                                      WHERE id = ${d.id}`)
+                           .join(" ;")
 
-            const promises = detalles.map(d => d.save())
-            promises.push(venta.save())
-            promises.concat(stocks.map(stock => {
-              stock.disponible = false;
-              return stock.save()
+            const descType = req.body.descuento.type ? `'${req.body.descuento.type}'` : `null`
+
+            sql = `${sql}; UPDATE venta
+                    SET estado = 'confirmado',
+                        descuento_tipo = ${descType},
+                        descuento_valor = ${req.body.descuento.value},
+                        mediopago_id = ${req.body.medioPago},
+                        recargo = ${req.body.recargo},
+                        total_bruto = ${totalBruto},
+                        total_neto = ${totalNeto}
+                    WHERE id = ${venta.id}`
+            
+            sql = `${sql};${stocks.map(s => `UPDATE stock
+                                    SET disponible = 0
+                                    WHERE id = ${s.id}`)
+                          .join(" ;")}`
+            
+            sql = `${sql}; COMMIT;`
+            LogService.info(sql)
+
+            return new Promise((resolve, reject) => Venta.query(sql, [], (err) => {
+              if(err === null) resolve()
+              else {
+                LogService.error("Error en la query de actualizar venta", err)
+                reject("Error desconocido al actualizar la venta")
+              }
             }))
-
-            return Promise.all(promises)
               
           }).then(() => {
             LogService.info(`Venta: ${venta.id} confirmada`)

@@ -33,21 +33,45 @@ module.exports = {
       if (!pedido) throw "El pedido no existe"
       if (pedido.estado === "confirmado") throw "El pedido ya había sido confirmado"
 
-      const updatePromises = []
-
       LogService.info(`Actualizando detalles del pedido ${pedidoId}`)
+
+      let sql = "SET xact_abort on; BEGIN TRANSACTION"
+      
       for(let i in detalles) {
         const detalle = detalles[i]
         detalle.cantidad_recibida = recibidos[detalle.id] >= 0 ? recibidos[detalle.id] : detalle.cantidad
-        LogService.info(`Detalle ${detalle.id} recibidos: ${detalle.cantidad_recibida}`)
-        updatePromises.push(detalle.save())
-        updatePromises.push(Stock.createNFromArticulo(detalle.cantidad_recibida, detalle.articulo_id, pedido.id, detalle.atributo_extra, pedido.sucursal_id))
+        //LogService.info(`Detalle ${detalle.id} recibidos: ${detalle.cantidad_recibida}`)
+        //updatePromises.push(Stock.createNFromArticulo(detalle.cantidad_recibida, detalle.articulo_id, pedido.id, detalle.atributo_extra, pedido.sucursal_id))
       }
 
-      pedido.estado = "confirmado";
-      updatePromises.push(pedido.save());
+      sql = `${sql};
+        ${detalles.map(d => `UPDATE detallePedidos
+                            SET cantidad_recibida = ${d.cantidad_recibida}
+                            WHERE id = ${d.id}`).join("; ")};
+        UPDATE pedido
+        SET estado = 'confirmado'
+        WHERE id = ${pedido.id}`
+        
+      return Articulo.find({id: detalles.map(d => d.articulo_id)})
+        .then(articulos => {
+          const inserts = detalles.map(d => {
+            const aIx = articulos.findIndex(a => a.id === d.articulo_id)
+            const articulo = articulos[aIx]
+            return Stock.createNFromArticulo(d.cantidad_recibida, articulo, pedido.id, d.atributo_extra, pedido.sucursal_id)
+          }).join("; ")
 
-      return Promise.all(updatePromises)
+          sql = `${sql}; ${inserts}; COMMIT;`
+          console.log(sql)
+
+          return new Promise((resolve, reject) => Pedido.query(sql, [], (err) => {
+            if(err === null) resolve()
+            else {
+              LogService.error("Error en la query de confirmar pedido", err)
+              reject("Error desconocido al confirmar pedido")
+            }
+          }))
+
+        })
 
     })
   }
