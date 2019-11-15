@@ -27,31 +27,26 @@ module.exports = {
 
     precio : { 
       type: 'float',
-      required: true,
-      notNull: true
+      required: true
     },
 
     precio_venta : { 
       type: 'float',
-      required: true,
-      notNull: true
+      required: true
     },
 
     actualiza_precio : { 
       type: 'boolean',
-      required: true,
-      notNull: true
+      required: true
     },
 
     proveedor_id : { 
       type: 'integer',
-      required: true,
-      notNull: true 
+      required: true
     },
 
     id_ref: { 
-      type: 'integer', 
-      index: true 
+      type: 'integer'
     }
   },
 

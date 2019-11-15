@@ -9,7 +9,10 @@ module.exports = {
 
   attributes: {
 
-    fecha : { type: 'date' },
+    fecha : {
+      type: 'string',
+      columnType: 'date',
+    },
 
     cliente_id : { type: 'integer' },
 

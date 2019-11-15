@@ -11,8 +11,6 @@ module.exports = {
 
     nombre : { type: 'string' },
 
-    telefono : { type: 'string' },
-
     direccion : { type: 'string' },
 
     mail : { type: 'string' }
