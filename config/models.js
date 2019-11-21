@@ -10,13 +10,10 @@ module.exports.models = {
   // This is pretty ineffecient, so if you don't _always_ need this feature, you
   // should turn these off and instead chain `.meta({fetch: true})` onto the
   // individual calls where you _do_ need records returned.
-  fetchRecordsOnUpdate: true,
-  fetchRecordsOnCreate: true,
-  fetchRecordsOnCreateEach: true,
-
-  // Fetching records on destroy was experimental, but if you were using it,
-  // uncomment the next line.
-  // fetchRecordsOnDestroy: true,
+  fetchRecordsOnUpdate: false,
+  fetchRecordsOnCreate: false,
+  fetchRecordsOnCreateEach: false,
+  fetchRecordsOnDestroy: false,
 
   // The former `connection` model setting is now `datastore`.  This sets the datastore
   // that models will use, unless overridden directly in the model file in `api/models`.
@@ -37,8 +34,16 @@ module.exports.models = {
     // timestamps.  By default, "sails new" will generate these two attributes as numbers,
     // giving you the most flexibility.  But for compatibility with your existing project,
     // we'll define them as strings.
-    createdAt: { type: 'string', autoCreatedAt: true, },
-    updatedAt: { type: 'string', autoUpdatedAt: true, },
+    createdAt: { 
+      type: 'string',
+      columnType: 'datetime',
+      autoCreatedAt: true, 
+    },
+    updatedAt: { 
+      type: 'string', 
+      columnType: 'datetime',
+      autoUpdatedAt: true
+    },
     // In Sails 1.0, the primary key field is no longer created for you, and `autoPK` is
     // not a valid model option.  Instead, you define it yourself and tell Sails which
     // attribute to use as the primary key by setting the `primaryKey` setting on the model.

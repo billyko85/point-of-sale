@@ -13,13 +13,10 @@ module.exports.datastores = {
   default: {
     adapter: 'sails-mssql-server',
     user: 'posApi',
-    password: 'hRYmd^2FXzK8oF!1Vp8Lu',
-    host: 'chapadany.database.windows.net', // azure database
+    password: 'P0intOfSale',
+    host: 'localhost', // azure database
     database: 'chapadany_prueba1',
-    defaultSchema: "pointofsale",
-    options: {
-      encrypt: true   // use this for Azure databases
-    }
+    defaultSchema: "pointofsale"
   }
 
 };

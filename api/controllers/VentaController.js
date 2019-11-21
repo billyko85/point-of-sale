@@ -107,8 +107,8 @@ module.exports = {
             sql = `${sql}; COMMIT;`
             LogService.info(sql)
 
-            return new Promise((resolve, reject) => Venta.query(sql, [], (err) => {
-              if(err === null) resolve()
+            return new Promise((resolve, reject) => sails.getDatastore().sendNativeQuery(sql, [], (err) => {
+              if(!err) resolve()
               else {
                 LogService.error("Error en la query de actualizar venta", err)
                 reject("Error desconocido al actualizar la venta")

@@ -27,6 +27,7 @@
     "mssql": "^3.3.0",
     "rc": "^1.2.8",
     "sails": "^1.2.3",
+    "sails-count-middleware": "^1.0.6",
     "sails-disk": "~0.10.9",
     "sails-hook-grunt": "^1.0.8",
     "sails-hook-orm": "^2.1.1",

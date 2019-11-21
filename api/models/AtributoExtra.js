@@ -12,6 +12,7 @@ module.exports = {
     codigo : { type: 'string' },
 
     descripcion : { type: 'string' }
+    
   }
 };
 

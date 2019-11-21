@@ -11,7 +11,7 @@ module.exports = {
 
     fecha : {
       type: 'string',
-      columnType: 'date',
+      columnType: 'datetime',
       required: true
     },
 

@@ -11,19 +11,37 @@ module.exports = {
 
     codigo_proveedor : { type: 'string' },
 
-    marca : { type: 'string' },
+    marca : { 
+      type: 'string', 
+      allowNull: true 
+    },
 
-    modelo : { type: 'string' },
+    modelo : { 
+      type: 'string', 
+      allowNull: true 
+    },
 
-    fabricante : { type: 'string' },
+    fabricante : { 
+      type: 'string', 
+      allowNull: true 
+    },
 
-    categoria : { type: 'string' },
+    categoria : { 
+      type: 'string', 
+      allowNull: true 
+    },
 
     descripcion : { type: 'string' },
 
-    stock_min : { type: 'integer' },
+    stock_min : { 
+      type: 'number',
+      allowNull: true
+    },
 
-    datos_extra : { type: 'string' },
+    datos_extra : { 
+      type: 'string', 
+      allowNull: true 
+    },
 
     precio : { 
       type: 'float',

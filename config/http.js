@@ -31,12 +31,11 @@ module.exports.http = {
   ***************************************************************************/
 
     order: [
-      'startRequestTimer',
       'cookieParser',
       'session',
       'myRequestLogger',
       'bodyParser',
-      'handleBodyParserError',
+      'addCount',
       'compress',
       'methodOverride',
       'poweredBy',
@@ -44,8 +43,6 @@ module.exports.http = {
       'router',
       'www',
       'favicon',
-      '404',
-      '500'
     ],
 
   /****************************************************************************
@@ -58,6 +55,8 @@ module.exports.http = {
         console.log("Requested :: ", req.method, req.url);
         return next();
     },
+
+    addCount: require('sails-count-middleware'),
 
 
   /***************************************************************************

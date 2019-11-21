@@ -87,7 +87,11 @@ module.exports = {
       LogService.debug("Agregando "+ req.body.cantidad +" unidades al detalle del pedido")
       detalle.cantidad += parseInt(req.body.cantidad)
       detalle.precio_compra = (articulo.precio * (1 - proveedor.porc_descuento / 100)).toFixed(2)
-      return detalle.save()
+      return DetallePedidos.update({id:detalle.id})
+        .set({
+          cantidad: detalle.cantidad,
+          precio_compra: detalle.precio_compra
+        })
     }).then(() => {
       LogService.info("Detalle de pedido creado")
       res.send(200)

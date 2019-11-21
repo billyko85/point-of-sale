@@ -11,7 +11,7 @@ module.exports = {
 
     descripcion : { type: 'string' },
 
-    recargo : { type: 'string' }
+    recargo : { type: 'number' }
   }
 };
 

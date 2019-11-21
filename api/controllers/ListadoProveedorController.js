@@ -8,11 +8,11 @@ module.exports = {
         .exec((err, proveedor) => {
             if(proveedor) {
                 const query = proveedor.tablaListado.trim().replace(/^select *(distinct)?/i, (str, distinct) => `SELECT ${distinct || ""} TOP 15`);
-                Proveedor.query(query, [], (err, rawResult) => {
+                sails.getDatastore().sendNativeQuery(query, [], (err, rawResult) => {
                     res.setHeader('Content-Type', 'application/json');
                     res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count');
-                    res.setHeader('X-Total-Count', rawResult.length);
-                    res.send(rawResult);
+                    res.setHeader('X-Total-Count', rawResult.rowsAffected[0]);
+                    res.send(rawResult.recordset);
                 })
             }else {
                 res.send(404);
@@ -46,22 +46,24 @@ module.exports = {
                             d.descripcion = s.descripcion,
                             d.precio = s.precio,
                             d.precio_venta = CASE WHEN d.actualiza_precio = 1 THEN round(s.precio * ${porcSellPrice}, 2) ELSE d.precio_venta END
+                            d.updatedAt = getdate()
                     WHEN NOT MATCHED THEN  
-                        INSERT (id_ref, codigo_proveedor, marca, modelo, fabricante, categoria, descripcion, datos_extra, precio, precio_venta, actualiza_precio, proveedor_id)  
-                        VALUES (s.id, s.codigo_proveedor, s.marca, s.modelo, s.fabricante, s.categoria, s.descripcion, s.datos_extra, s.precio, round(s.precio * ${porcSellPrice}, 2), 1, ${proveedor.id});
+                        INSERT (id_ref, codigo_proveedor, marca, modelo, fabricante, categoria, descripcion, datos_extra, precio, precio_venta, actualiza_precio, proveedor_id, createdAt, updatedAt)  
+                        VALUES (s.id, s.codigo_proveedor, s.marca, s.modelo, s.fabricante, s.categoria, s.descripcion, s.datos_extra, s.precio, round(s.precio * ${porcSellPrice}, 2), 1, ${proveedor.id}, getdate(), getdate());
 
                 `
 
-                Proveedor.query(query, [], (err) => {
-                    if(err === null) {
+                sails.getDatastore().sendNativeQuery(query, [], (err) => {
+                    if(!err) {
 
                         LogService.info(`Actualizando precios de stock del proveedor ${req.body.proveedor}`)
                         const query = `
                             UPDATE stock
-                            SET precio_venta = (SELECT a.precio_venta from articulo a where a.id = stock.articulo_id)
+                            SET precio_venta = (SELECT a.precio_venta from articulo a where a.id = stock.articulo_id),
+                                updatedAt = getdate()
                             WHERE proveedor_id = ${proveedor.id};
                         `
-                        Proveedor.query(query, [], (err) => {
+                        sails.getDatastore().sendNativeQuery(query, [], (err) => {
                             if(err) {
                                 LogService.error(`Error actualizando precios de stock del proveedor ${req.body.proveedor}`, err)
                                 res.status(500).send(`Error actualizando info del proveedor`);
