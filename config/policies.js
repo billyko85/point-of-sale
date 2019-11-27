@@ -26,7 +26,12 @@ module.exports.policies = {
   *                                                                          *
   ***************************************************************************/
 
-  // '*': true,
+  '*': require('passport').authenticate('jwt', { session: false }),
+  
+  // whitelist the auth controller
+	'auth': {
+		'*': true
+	}
 
   /***************************************************************************
   *                                                                          *

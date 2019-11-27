@@ -41,7 +41,11 @@ module.exports.routes = {
   'post /listadoProveedor/actualizar': 'ListadoProveedorController.updateArticulos',
   'post /pedido/confirmar': 'PedidoController.confirmar',
   'post /detallePedidos': 'DetallePedidosController.create',
-  'post /venta/confirmar': 'VentaController.confirmar'
+  'post /venta/confirmar': 'VentaController.confirmar',
+
+  // Login routes
+  'POST /login': 'AuthController.login',
+  'POST /logout': 'AuthController.logout',
 
   /***************************************************************************
   *                                                                          *

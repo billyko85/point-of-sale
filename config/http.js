@@ -33,6 +33,7 @@ module.exports.http = {
     order: [
       'cookieParser',
       'session',
+      'passportInit',
       'myRequestLogger',
       'bodyParser',
       'addCount',
@@ -74,6 +75,8 @@ module.exports.http = {
 
 
     bodyParser: require('skipper')({strict: true}),
+
+    passportInit: require('passport').initialize(),
 
   },
 
