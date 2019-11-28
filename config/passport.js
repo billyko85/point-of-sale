@@ -32,6 +32,7 @@ passport.use(new LocalStrategy({
       let userDetails = {
         email: user.email,
         username: user.username,
+        sucursal_id: user.sucursal_id,
         id: user.id
       };
 
