@@ -76,6 +76,7 @@ module.exports.security = {
   
     //headers: 'X-Total-Count'
   
+    allowRequestHeaders: 'content-type,authorization',
     allowResponseHeaders: 'X-Total-Count'
 
   }
