@@ -16,6 +16,7 @@
  * http://sailsjs.org/#!/documentation/reference/sails.config/sails.config.policies.html
  */
 
+const isLoggedIn = require('passport').authenticate('jwt', { session: false })
 
 module.exports.policies = {
 
@@ -26,8 +27,12 @@ module.exports.policies = {
   *                                                                          *
   ***************************************************************************/
 
-  '*': require('passport').authenticate('jwt', { session: false }),
+  '*': isLoggedIn,
   
+  'user/update': [isLoggedIn, 'userPolicies'],
+  'user/create': [isLoggedIn, 'userPolicies'],
+  'user/destroy': false,
+
   // whitelist the auth controller
 	'auth': {
 		'*': true

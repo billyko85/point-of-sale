@@ -44,14 +44,13 @@ passport.use(new LocalStrategy({
 
 passport.use(new JWTStrategy({
   jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-  secretOrKey: 'your_jwt_secret'
-}, function (jwtPayload, cb) {
-  return User.findOne({ id: jwtPayload.id })
-    .then(user => {
-      return cb(null, user);
-    })
-    .catch(err => {
-      return cb(err);
-    });
+  secretOrKey: 'WF92UWJlcMNx9*tygAKQY1Nz2$f*%5CK#DMlrTKSo3zhNKi4&6OlMVz',
+  passReqToCallback: true
+}, function (req, jwtPayload, cb) {
+  if(jwtPayload !== undefined) {
+    req.user = jwtPayload
+    return cb(null, req.user);
+  }
+  return cb("Not logged in")
 }
 ));

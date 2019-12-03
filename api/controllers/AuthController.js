@@ -13,14 +13,14 @@ module.exports = {
     passport.authenticate('local', {session: false}, function (err, user, info) {
       if ((err) || (!user)) {
         return res.send({
-          message: info.message,
+          message: err || info.message,
           user
         });
       }
       req.logIn(user, {session: false}, function (err) {
         if (err) res.send(err);
         
-        const token = jwt.sign(user, 'your_jwt_secret', {expiresIn: 60 * 60 * 24, algorithm: "HS256"});
+        const token = jwt.sign(user, 'WF92UWJlcMNx9*tygAKQY1Nz2$f*%5CK#DMlrTKSo3zhNKi4&6OlMVz', {expiresIn: 60 * 60 * 24, algorithm: "HS256"});
 
         return res.json({user, token});
       });
