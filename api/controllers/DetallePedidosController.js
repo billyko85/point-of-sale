@@ -91,10 +91,10 @@ module.exports = {
         .set({
           cantidad: detalle.cantidad,
           precio_compra: detalle.precio_compra
-        })
-    }).then(() => {
+        }).then(() => detalle)
+    }).then(detalle => {
       LogService.info("Detalle de pedido creado")
-      res.send(200)
+      res.send(detalle)
     }).catch(reason => {
       LogService.error("Error creando un detalle de pedido", reason)
       res.send(500)
