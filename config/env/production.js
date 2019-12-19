@@ -23,7 +23,7 @@ module.exports = {
 
   datastores: {
     default: {
-      adapter: 'sails-mssql-server',
+      adapter: 'sails1-mssqlserver',
       user: 'posApi',
       password: 'hRYmd^2FXzK8oF!1Vp8Lu',
       host: 'chapadany.database.windows.net', // azure database
