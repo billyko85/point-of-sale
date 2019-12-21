@@ -33,6 +33,8 @@ module.exports.policies = {
   'user/create': [isLoggedIn, 'userPolicies'],
   'user/destroy': false,
 
+  'venta/create': [isLoggedIn, 'ventaCreatePolicies'],
+
   // whitelist the auth controller
 	'auth': {
 		'*': true

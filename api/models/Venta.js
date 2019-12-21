@@ -14,7 +14,7 @@ module.exports = {
       columnType: 'datetime',
     },
 
-    cliente_id : { type: 'integer' },
+    cliente_id : { type: 'number' },
 
     estado : { type: 'string', required: true},
 
@@ -22,7 +22,11 @@ module.exports = {
 
     descuento_valor : { type: 'float' },
 
-    mediopago_id : { type: 'integer' },
+    mediopago_id : { type: 'number' },
+
+    user_id : { type: 'number' },
+
+    sucursal_id : { type: 'number' },
 
     recargo : { type: 'float' },
 
