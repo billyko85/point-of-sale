@@ -6,7 +6,7 @@
  */
 
 module.exports = {
-	
+
 
 
   /**
@@ -36,6 +36,13 @@ module.exports = {
     return res.json({
       todo: 'precio_venta() is not implemented yet!'
     });
+  },
+
+  create: function (req, res) {
+    DetalleVenta.create(req.body)
+      .fetch()
+      .then(created => res.json(created))
+      .catch(err => res.status(err.raw.code).send(err.raw))
   }
 
 };

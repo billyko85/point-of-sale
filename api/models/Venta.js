@@ -5,6 +5,8 @@
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
+const isArray = require("lodash/isArray")
+
 module.exports = {
 
   attributes: {

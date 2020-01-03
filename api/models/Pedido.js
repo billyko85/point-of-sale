@@ -32,7 +32,7 @@ module.exports = {
     
   },
   
-  afterValidate : (pedido, cb) => {
+  /*beforeCreate : (pedido, cb) => {
 
     PedidoService.findPedidoPendienteForProveedor(pedido.proveedor_id, pedido.sucursal_id)
     .then((resp) => {
@@ -42,7 +42,7 @@ module.exports = {
       }
     })
 
-  },
+  },*/
 
   afterDestroy: (destroyedRecords, cb) => {
     Promise.all(

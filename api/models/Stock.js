@@ -42,17 +42,17 @@ module.exports = {
 
     codigo_proveedor : { type: 'string' },
 
-    marca : { type: 'string' },
+    marca : { type: 'string', allowNull: true },
 
-    modelo : { type: 'string' },
+    modelo : { type: 'string', allowNull: true },
 
-    fabricante : { type: 'string' },
+    fabricante : { type: 'string', allowNull: true },
 
-    descripcion : { type: 'string' },
+    descripcion : { type: 'string', allowNull: true },
 
-    datos_extra : { type: 'string' },
+    datos_extra : { type: 'string', allowNull: true },
 
-    atributo_extra : { type: 'string' },
+    atributo_extra : { type: 'string', allowNull: true },
 
     precio_venta : { type: 'float', required: true },
 
