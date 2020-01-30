@@ -6,8 +6,9 @@ RUN apk add python make g++
 COPY . /app
 WORKDIR /app
 
+RUN rm -rf node_modules
 RUN npm i
-RUN npm i -g sails@0.12
+RUN npm i -g sails
 
 EXPOSE 1337
 

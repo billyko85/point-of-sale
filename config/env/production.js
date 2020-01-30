@@ -33,6 +33,10 @@ module.exports = {
         encrypt: true   // use this for Azure databases
       }
     }
+  },
+
+  sockets: {
+    onlyAllowOrigins: ["https://chapadany-web.azurewebsites.net"]
   }
 
   /***************************************************************************
