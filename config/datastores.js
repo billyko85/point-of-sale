@@ -11,12 +11,17 @@ module.exports.datastores = {
   // still available as `config/connections-old.js.txt`.
 
   default: {
-    adapter: 'sails1-mssqlserver',
+    adapter: 'sails-mssql-server',
     user: 'posApi',
     password: 'P0intOfSale',
     host: 'localhost', // azure database
     database: 'chapadany_prueba1',
-    defaultSchema: "pointofsale"
+    defaultSchema: "pointofsale",
+    pool: {
+      min: 10,
+      max: 100,
+      idleTimeout: 60000
+    }
   }
 
 };

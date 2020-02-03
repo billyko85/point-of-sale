@@ -38,7 +38,7 @@
     "sails-hook-orm": "^2.1.1",
     "sails-hook-sockets": "^2.0.0",
     "sails-mssql-server": "file:./api/adapters/sails-mssql-server/",
-    "sails1-mssqlserver": "^1.0.1",
+    "sails1-mssqlserver": "^1.0.2",
     "skipper": "^0.8.7",
     "underscore.string": "^3.3.5",
     "waterline-cursor": "0.0.7"
