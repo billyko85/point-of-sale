@@ -45,14 +45,13 @@ module.exports = {
                             d.categoria = s.categoria,
                             d.descripcion = s.descripcion,
                             d.precio = s.precio,
-                            d.precio_venta = CASE WHEN d.actualiza_precio = 1 THEN round(s.precio * ${porcSellPrice}, 2) ELSE d.precio_venta END
+                            d.precio_venta = CASE WHEN d.actualiza_precio = 1 THEN round(s.precio * ${porcSellPrice}, 2) ELSE d.precio_venta END,
                             d.updatedAt = getdate()
                     WHEN NOT MATCHED THEN  
                         INSERT (id_ref, codigo_proveedor, marca, modelo, fabricante, categoria, descripcion, datos_extra, precio, precio_venta, actualiza_precio, proveedor_id, createdAt, updatedAt)  
                         VALUES (s.id, s.codigo_proveedor, s.marca, s.modelo, s.fabricante, s.categoria, s.descripcion, s.datos_extra, s.precio, round(s.precio * ${porcSellPrice}, 2), 1, ${proveedor.id}, getdate(), getdate());
 
                 `
-
                 sails.getDatastore().sendNativeQuery(query, [], (err) => {
                     if(!err) {
 
