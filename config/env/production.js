@@ -31,7 +31,8 @@ module.exports = {
       defaultSchema: "pointofsale",
       options: {
         encrypt: true   // use this for Azure databases
-      }
+      },
+      requestTimeout: 10 * 60 * 1000
     }
   },
 

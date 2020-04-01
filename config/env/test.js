@@ -30,7 +30,8 @@ module.exports = {
       database: 'chapadany_prueba1',
       options: {
         encrypt: true   // use this for Azure databases
-      }
+      },
+      requestTimeout: 10 * 60 * 1000
     }
   }
 
