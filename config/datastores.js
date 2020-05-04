@@ -12,15 +12,17 @@ module.exports.datastores = {
 
   default: {
     adapter: 'sails-mssql-server',
-    user: 'posApi',
-    password: 'P0intOfSale',
-    host: 'localhost', // azure database
+    user: 'testPosApi',
+    password: '1LRfo&YNujqd2HFf',
+    host: 'chapadany.database.windows.net', // azure database
     database: 'chapadany_prueba1',
-    defaultSchema: "pointofsale",
+    options: {
+      encrypt: true   // use this for Azure databases
+    },
+    requestTimeout: 10 * 60 * 1000,
     pool: {
-      min: 10,
-      max: 100,
-      idleTimeout: 60000
+      min: 5,
+      max: 50
     }
   }
 

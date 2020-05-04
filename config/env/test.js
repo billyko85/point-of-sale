@@ -31,7 +31,11 @@ module.exports = {
       options: {
         encrypt: true   // use this for Azure databases
       },
-      requestTimeout: 10 * 60 * 1000
+      requestTimeout: 10 * 60 * 1000,
+      pool: {
+        min: 5,
+        max: 50
+      }
     }
   }
 

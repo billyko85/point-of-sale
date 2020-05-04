@@ -28,11 +28,14 @@ module.exports = {
       password: 'hRYmd^2FXzK8oF!1Vp8Lu',
       host: 'chapadany.database.windows.net', // azure database
       database: 'chapadany_prueba1',
-      defaultSchema: "pointofsale",
       options: {
         encrypt: true   // use this for Azure databases
       },
-      requestTimeout: 10 * 60 * 1000
+      requestTimeout: 10 * 60 * 1000,
+      pool: {
+        min: 5,
+        max: 50
+      }
     }
   },
 

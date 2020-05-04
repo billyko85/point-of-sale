@@ -58,6 +58,10 @@ module.exports = {
             detalles = values[0]
             stocks = values[1]
 
+            if(detalles.length === 0) {
+              throw "No se puede confirmar una venta vacía."
+            }
+
             LogService.info(`Venta: ${venta.id} - encontrados ${detalles.length} detalles y ${stocks.length} stocks`)
 
             for(let i=0; i<detalles.length; i++) {
