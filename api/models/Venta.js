@@ -50,10 +50,8 @@ module.exports = {
 
   },
 
-  afterDestroy: (destroyedRecords, cb) => {
-    Promise.all(
-      destroyedRecords.map(destroyedRecord => DetalleVenta.destroy({venta_id: destroyedRecord.id}))
-    ).then(() => cb())
+  afterDestroy: (destroyedRecord, cb) => {
+    DetalleVenta.destroy({venta_id: destroyedRecord.id}).then(() => cb())
   },
 
   calcularTotalNeto: (totalBruto, descuentoTipo, descuentoValor, recargo) => {
