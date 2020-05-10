@@ -10,11 +10,14 @@ module.exports = {
   attributes: {
 
     fecha : { 
-      type: 'string',
-      columnType: 'date',
+      type: 'ref',
+      columnType: 'datetime',
     },
 
-    medioPago : { type: 'string' },
+    medioPago : {
+      type: 'string',
+      allowNull: true
+    },
 
     total : { type: 'float' }
   }

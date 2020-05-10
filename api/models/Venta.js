@@ -12,19 +12,31 @@ module.exports = {
   attributes: {
 
     fecha : {
-      type: 'string',
+      type: 'ref',
       columnType: 'datetime',
     },
 
-    cliente_id : { type: 'number' },
+    cliente_id : {
+      type: 'number',
+      allowNull: true
+    },
 
     estado : { type: 'string', required: true},
 
-    descuento_tipo : { type: 'string' },
+    descuento_tipo : {
+      type: 'string',
+      allowNull: true
+    },
 
-    descuento_valor : { type: 'float' },
+    descuento_valor : {
+      type: 'float',
+      allowNull: true
+    },
 
-    mediopago_id : { type: 'number' },
+    mediopago_id : {
+      type: 'number',
+      allowNull: true
+    },
 
     user_id : { type: 'number' },
 

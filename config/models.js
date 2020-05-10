@@ -35,12 +35,12 @@ module.exports.models = {
     // giving you the most flexibility.  But for compatibility with your existing project,
     // we'll define them as strings.
     createdAt: { 
-      type: 'string',
+      type: 'ref',
       columnType: 'datetime',
       autoCreatedAt: true, 
     },
     updatedAt: { 
-      type: 'string', 
+      type: 'ref', 
       columnType: 'datetime',
       autoUpdatedAt: true
     },

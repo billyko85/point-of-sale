@@ -13,7 +13,10 @@ module.exports = {
 
     direccion : { type: 'string' },
 
-    mail : { type: 'string' }
+    mail : {
+      type: 'string',
+      allowNull: true
+    }
   }
 };
 

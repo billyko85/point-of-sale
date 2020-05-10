@@ -10,7 +10,7 @@ module.exports = {
   attributes: {
 
     fecha : {
-      type: 'string',
+      type: 'ref',
       columnType: 'datetime',
       required: true
     },
