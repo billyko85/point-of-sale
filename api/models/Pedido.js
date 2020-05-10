@@ -44,10 +44,8 @@ module.exports = {
 
   },*/
 
-  afterDestroy: (destroyedRecords, cb) => {
-    Promise.all(
-      destroyedRecords.map(destroyedRecord => DetallePedidos.destroy({pedido_id: destroyedRecord.id}))
-    ).then(() => cb())
+  afterDestroy: (destroyedRecord, cb) => {
+    DetallePedidos.destroy({pedido_id: destroyedRecord.id}).then(() => cb())
   }
 
 };

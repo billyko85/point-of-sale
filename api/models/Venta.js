@@ -5,8 +5,6 @@
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
-const isArray = require("lodash/isArray")
-
 module.exports = {
 
   attributes: {
@@ -50,8 +48,12 @@ module.exports = {
 
   },
 
-  afterDestroy: (destroyedRecord, cb) => {
-    DetalleVenta.destroy({venta_id: destroyedRecord.id}).then(() => cb())
+  afterDestroy: async (destroyedRecord, cb) => {
+    const detalles = await DetalleVenta.find({venta_id: destroyedRecord.id})
+    const ids = detalles.map(d => d.id)
+    await Devolucion.destroy({ detalle_venta_id: ids })
+    await DetalleVenta.destroy({ id: ids })
+    cb()
   },
 
   calcularTotalNeto: (totalBruto, descuentoTipo, descuentoValor, recargo) => {
