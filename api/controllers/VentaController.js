@@ -50,7 +50,7 @@ module.exports = {
       return;
     }
 
-    VentaService.confirmar(venta, req.body.stockIds, req.body.descuento, req.body.recargo, req.body.medioPago)
+    VentaService.confirmar(venta, req.body.stockIds, req.body.devoluciones, req.body.descuento, req.body.recargo, req.body.medioPago)
       .then(() => {
         LogService.info(`Venta: ${req.body.id} confirmada`)
         res.send(200);

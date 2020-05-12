@@ -104,6 +104,16 @@ module.exports = {
       values.proveedor_id = stock.proveedor_id
       values.devolucion = devolucion
 
+      if(values.devolucion) {
+        const devId = await crearDevolucion(values, venta, cb)
+        if(devId === null) {
+          cb({code: 404, message: 'No se encontró la venta original del artículo a devolver.' })
+          return
+        }
+
+        values.devolucion_id = devId
+      }
+      
       cb()
 
     } else {
@@ -113,43 +123,37 @@ module.exports = {
 
   },
 
-  afterCreate: async (detalle, cb) => {
-
-    if(detalle.devolucion) {
-      const detallesDeVentas = await DetalleVenta.find({
-        stock_id: detalle.stock_id,
-        devolucion: false
-      })
-    
-      if(detallesDeVentas.length === 0) {
-        cb({code: 404, message: 'No se encontró la venta original del artículo.' })
-        return
-      }
-    
-      const detalleOrig = detallesDeVentas[0]
-      const ventaOrig = await Venta.findOne(detalleOrig.venta_id)
-      const ventaCambio = await Venta.findOne(detalle.venta_id)
-      
-      await Devolucion.create({
-        venta_inicial_id: detalleOrig.venta_id,
-        venta_devolucion_id: ventaCambio.id,
-        precio: detalleOrig.precio_venta,
-        fecha_venta: ventaOrig.fecha,
-        fecha_cambio: ventaCambio.fecha,
-        detalle_venta_id: detalle.id
-      })
-    }
-  
-    cb()
-  },
-
   afterDestroy: async (destroyedRecord, cb) => {
     
     if(destroyedRecord.devolucion) {
-      await Devolucion.destroy({ detalle_venta_id: destroyedRecord.id })
+      await Devolucion.destroy({ id: destroyedRecord.devolucion_id })
     }
     
     cb()
   },
 
 };
+
+const crearDevolucion = async (detalle, ventaCambio, cb) => {
+  const detallesDeVentas = await DetalleVenta.find({
+    stock_id: detalle.stock_id,
+    devolucion: false
+  })
+
+  if(detallesDeVentas.length === 0) {
+    return null
+  }
+
+  const detalleOrig = detallesDeVentas[0]
+  const ventaOrig = await Venta.findOne(detalleOrig.venta_id)
+  
+  const dev = await Devolucion.create({
+    venta_inicial_id: detalleOrig.venta_id,
+    venta_devolucion_id: ventaCambio.id,
+    precio: detalleOrig.precio_venta,
+    fecha_venta: ventaOrig.fecha,
+    fecha_cambio: ventaCambio.fecha,
+  }).fetch()
+  return dev.id
+
+}

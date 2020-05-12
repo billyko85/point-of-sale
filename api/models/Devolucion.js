@@ -9,8 +9,6 @@ module.exports = {
 
   attributes: {
 
-    detalle_venta_id: { type: 'number' },
-
     venta_inicial_id: { type: 'number' },
 
     venta_devolucion_id: { type: 'number' },
@@ -27,7 +25,12 @@ module.exports = {
       columnType: 'datetime'
     },
 
-    descripcion: {
+    detalle: {
+      type: 'string',
+      allowNull: true
+    },
+
+    tipo_devolucion: {
       type: 'string',
       allowNull: true
     }

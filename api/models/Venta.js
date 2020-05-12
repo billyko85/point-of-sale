@@ -51,7 +51,8 @@ module.exports = {
   afterDestroy: async (destroyedRecord, cb) => {
     const detalles = await DetalleVenta.find({venta_id: destroyedRecord.id})
     const ids = detalles.map(d => d.id)
-    await Devolucion.destroy({ detalle_venta_id: ids })
+    const devIds = detales.map(d => d.devolucion_id)
+    await Devolucion.destroy({ id: devIds })
     await DetalleVenta.destroy({ id: ids })
     cb()
   },

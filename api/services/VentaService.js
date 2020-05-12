@@ -18,7 +18,7 @@ module.exports = {
     LogService.info(`Venta: ${venta.id} - encontrados ${detalles.length} detalles`)
 
     const detallesCompras = detalles.filter(d => !d.devolucion)
-    validarCompras(detallesCompras, stocks)
+    validarCompras(detallesCompras, stocks, stockIds)
 
     const detallesDevoluciones = detalles.filter(d => d.devolucion)
     validarDevoluciones(detallesDevoluciones, devoluciones)
@@ -38,7 +38,7 @@ module.exports = {
       detallesCompras[i].stock_id = stockIds[detallesCompras[i].id]
     }
 
-    return updateDatabase(venta, detallesCompras, stockIds)
+    return updateDatabase(venta, detallesCompras, detallesDevoluciones, devoluciones, stockIds)
 
   },
 
@@ -50,7 +50,7 @@ module.exports = {
 }
 
 
-const validarCompras = (detallesCompras, stocks) => {
+const validarCompras = (detallesCompras, stocks, stockIds) => {
   for (let i = 0; i < detallesCompras.length; i++) {
     const detalle = detallesCompras[i]
 
@@ -71,14 +71,13 @@ const validarCompras = (detallesCompras, stocks) => {
 const validarDevoluciones = (detallesDevoluciones, devoluciones) => {
   for (let i=0; i < detallesDevoluciones.length; i++) {
     const detalle = detallesDevoluciones[i]
-    
     const devolucion = devoluciones[detalle.id]
     if(!devolucion || !devolucion.type || !devolucion.detail) throw "Se debe ingresar un detalle a cada devolución"
 
   }
 }
 
-const updateDatabase = (venta, detallesCompras, stockIds) => {
+const updateDatabase = (venta, detallesCompras, detallesDevoluciones, devoluciones, stockIds) => {
   LogService.info(`Venta: ${venta.id} - actualizando datos en db`)
 
   let sql = "SET xact_abort on; BEGIN TRANSACTION;"
@@ -99,12 +98,25 @@ const updateDatabase = (venta, detallesCompras, stockIds) => {
                 total_neto = ${venta.total_neto}
             WHERE id = ${venta.id}`
 
-  sql = `${sql};${stockIds.map(id => `UPDATE stock
+  sql = `${sql}; ${Object.values(stockIds).map(id => `UPDATE stock
                             SET disponible = 0
                             WHERE id = ${id}`)
     .join(" ;")}`
 
-  sql = `${sql}; COMMIT;`
+  sql = `${sql}; ${Object.values(detallesDevoluciones)
+    .map(d => `UPDATE stock
+              SET disponible = 1
+              WHERE id = ${d.stock_id}`)
+    .join(" ;")}`
+
+  const devolSql = Object.values(detallesDevoluciones)
+    .map(d => `UPDATE devolucion
+               SET tipo_devolucion = '${devoluciones[d.id].type}',
+                   detalle = '${devoluciones[d.id].detail.replace(/['"]/g, "$&$&")}'`)
+    .join(" ;")
+  
+  sql = `${sql}; ${devolSql}; COMMIT;`
+  
   LogService.info(sql)
 
   return new Promise((resolve, reject) => sails.getDatastore().sendNativeQuery(sql, [], (err) => {
