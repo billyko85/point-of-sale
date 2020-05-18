@@ -1,7 +1,7 @@
 {
   "name": "point-of-sale-api-2",
   "private": true,
-  "version": "2.1.5",
+  "version": "2.2.0",
   "description": "a Sails application",
   "keywords": [],
   "dependencies": {
