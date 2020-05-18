@@ -80,6 +80,9 @@ const validarDevoluciones = (detallesDevoluciones, devoluciones) => {
 const updateDatabase = (venta, detallesCompras, detallesDevoluciones, devoluciones, stockIds) => {
   LogService.info(`Venta: ${venta.id} - actualizando datos en db`)
 
+  const detallesFallas = Object.values(detallesDevoluciones).filter(d => devoluciones[d.id].type === "FALLA")
+  const detallesDevOtros = Object.values(detallesDevoluciones).filter(d => devoluciones[d.id].type !== "FALLA")
+
   let sql = "SET xact_abort on; BEGIN TRANSACTION;"
   sql += detallesCompras.map(d => `UPDATE detalleVenta
                                 SET stock_id = ${d.stock_id}
@@ -103,11 +106,42 @@ const updateDatabase = (venta, detallesCompras, detallesDevoluciones, devolucion
                             WHERE id = ${id}`)
     .join(" ;")}`
 
-  sql = `${sql}; ${Object.values(detallesDevoluciones)
+  sql = `${sql}; ${detallesDevOtros
     .map(d => `UPDATE stock
               SET disponible = 1
               WHERE id = ${d.stock_id}`)
     .join(" ;")}`
+
+  const gtiaSql = detallesFallas.map(d =>
+    `INSERT INTO garantia (
+      sucursal_id,
+      stock_id,
+      proveedor_id,
+      detalle,
+      createdAt
+    ) values (
+      ${venta.sucursal_id},
+      ${d.stock_id},
+      ${d.proveedor_id},
+      '${devoluciones[d.id].detail.replace(/['"]/g, "$&$&")}',
+      getdate()
+    );
+    INSERT INTO estadogarantia (
+      garantia_id,
+      secuencia,
+      fecha,
+      estado,
+      detalle,
+      createdAt
+    ) values (
+      @@identity,
+      0,
+      getdate(),
+      'Devuelto',
+      '${devoluciones[d.id].detail.replace(/['"]/g, "$&$&")}',
+      getdate()
+    )`
+  ).join(" ;")
 
   const devolSql = Object.values(detallesDevoluciones)
     .map(d => `UPDATE devolucion
@@ -115,7 +149,7 @@ const updateDatabase = (venta, detallesCompras, detallesDevoluciones, devolucion
                    detalle = '${devoluciones[d.id].detail.replace(/['"]/g, "$&$&")}'`)
     .join(" ;")
   
-  sql = `${sql}; ${devolSql}; COMMIT;`
+  sql = `${sql}; ${devolSql}; ${gtiaSql} COMMIT;`
   
   LogService.info(sql)
 

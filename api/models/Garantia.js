@@ -9,24 +9,18 @@ module.exports = {
 
   attributes: {
 
-    //  ╔═╗╦═╗╦╔╦╗╦╔╦╗╦╦  ╦╔═╗╔═╗
-    //  ╠═╝╠╦╝║║║║║ ║ ║╚╗╔╝║╣ ╚═╗
-    //  ╩  ╩╚═╩╩ ╩╩ ╩ ╩ ╚╝ ╚═╝╚═╝
+    sucursal_id: { type: 'number' },
 
-    stock_id: { type: 'string' },
+    stock_id: { type: 'number' },
 
-    proveedor_id: { type: 'string' },
+    proveedor_id: { type: 'number' },
 
-    detalle: { type: 'string' }
+    detalle: { type: 'string' },
 
-    //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
-    //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
-    //  ╚═╝╩ ╩╚═╝╚═╝═╩╝╚═╝
-
-
-    //  ╔═╗╔═╗╔═╗╔═╗╔═╗╦╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
-    //  ╠═╣╚═╗╚═╗║ ║║  ║╠═╣ ║ ║║ ║║║║╚═╗
-    //  ╩ ╩╚═╝╚═╝╚═╝╚═╝╩╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
+    garantia_reconocida: {
+      type: 'boolean',
+      allowNull: true
+    }
 
   },
 

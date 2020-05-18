@@ -91,7 +91,6 @@ module.exports = {
         return;
       }
       
-      const precio_venta = stock.disponible ? stock.precio_venta : (stock.precio_venta * -1)
       const devolucion = !stock.disponible
 
       values.codigo_proveedor = stock.codigo_proveedor
@@ -100,17 +99,25 @@ module.exports = {
       values.fabricante = stock.fabricante
       values.descripcion = stock.descripcion
       values.atributo_extra = stock.atributo_extra
-      values.precio_venta = precio_venta
+      values.precio_venta = stock.precio_venta
       values.proveedor_id = stock.proveedor_id
       values.devolucion = devolucion
 
       if(values.devolucion) {
-        const devId = await crearDevolucion(values, venta, cb)
-        if(devId === null) {
+
+        const detallesDeVentas = await DetalleVenta.find({
+          stock_id: values.stock_id,
+          devolucion: false
+        })
+      
+        if(detallesDeVentas.length === 0) {
           cb({code: 404, message: 'No se encontró la venta original del artículo a devolver.' })
           return
         }
+        const detVenta = detallesDeVentas.pop()
+        const devId = await crearDevolucion(detVenta, venta)
 
+        values.precio_venta = detVenta.precio_venta * -1
         values.devolucion_id = devId
       }
       
@@ -134,17 +141,8 @@ module.exports = {
 
 };
 
-const crearDevolucion = async (detalle, ventaCambio, cb) => {
-  const detallesDeVentas = await DetalleVenta.find({
-    stock_id: detalle.stock_id,
-    devolucion: false
-  })
+const crearDevolucion = async (detalleOrig, ventaCambio) => {
 
-  if(detallesDeVentas.length === 0) {
-    return null
-  }
-
-  const detalleOrig = detallesDeVentas[0]
   const ventaOrig = await Venta.findOne(detalleOrig.venta_id)
   
   const dev = await Devolucion.create({
@@ -154,6 +152,7 @@ const crearDevolucion = async (detalle, ventaCambio, cb) => {
     fecha_venta: ventaOrig.fecha,
     fecha_cambio: ventaCambio.fecha,
   }).fetch()
+
   return dev.id
 
 }
