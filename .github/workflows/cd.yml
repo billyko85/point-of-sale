@@ -11,7 +11,7 @@ jobs:
       - run: docker build . -t chapadany.azurecr.io/point-of-sale-api:${{ github.sha }}
 
   push:
-    needs: setup
+    needs: build
     steps:
       - name: "Login via Azure CLI"
         uses: azure/login@v1
@@ -28,7 +28,7 @@ jobs:
 
       - name: Azure logout
         run: az logout
-  
+
   deploy-test:
     needs: push
 
