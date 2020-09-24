@@ -34,7 +34,7 @@ jobs:
       - name: "Change webapp version"
         uses: azure/webapps-deploy@v2
         with:
-          app-name: "test-chapadany-web"
+          app-name: "test-chapadany-api"
           images: "chapadany.azurecr.io/point-of-sale-api:${{ github.sha }}"
 
       - name: Azure logout
