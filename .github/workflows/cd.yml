@@ -12,11 +12,6 @@ jobs:
         uses: actions/checkout@master
       - run: docker build . -t chapadany.azurecr.io/point-of-sale-api:${{ github.sha }}
 
-      - name: "Login via Azure CLI"
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
       - uses: azure/docker-login@v1
         with:
           login-server: chapadany.azurecr.io
@@ -24,11 +19,6 @@ jobs:
           password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
 
       - run: docker push chapadany.azurecr.io/point-of-sale-api:${{ github.sha }}
-
-      - name: Azure logout
-        run: az logout
-
-
 
   deploy-test:
     runs-on: ubuntu-latest
@@ -39,7 +29,7 @@ jobs:
       - name: "Login via Azure CLI"
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          creds: ${{ secrets.AZURE_TEST_CREDENTIALS }}
 
       - name: "Change webapp version"
         uses: azure/webapps-deploy@v2
