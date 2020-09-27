@@ -15,6 +15,8 @@ module.exports.models = {
   fetchRecordsOnCreateEach: false,
   fetchRecordsOnDestroy: false,
 
+  migrate: 'safe',
+
   // The former `connection` model setting is now `datastore`.  This sets the datastore
   // that models will use, unless overridden directly in the model file in `api/models`.
   // It defaults to a datastore called `default`, which (unless otherwise configured in

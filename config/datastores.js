@@ -11,7 +11,7 @@ module.exports.datastores = {
   // still available as `config/connections-old.js.txt`.
 
   default: {
-    adapter: 'sails-mssql-server',
+    adapter: 'sails1-mssqlserver',
     user: 'testPosApi',
     password: '1LRfo&YNujqd2HFf',
     host: 'chapadany.database.windows.net', // azure database

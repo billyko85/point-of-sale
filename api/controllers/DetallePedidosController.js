@@ -5,6 +5,8 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
+const DetallePedidos = require("../models/DetallePedidos");
+
 module.exports = {
 	
 
@@ -86,7 +88,7 @@ module.exports = {
 
       LogService.debug("Agregando "+ req.body.cantidad +" unidades al detalle del pedido")
       detalle.cantidad += parseInt(req.body.cantidad)
-      detalle.precio_compra = (articulo.precio * (1 - proveedor.porc_descuento / 100)).toFixed(2)
+      detalle.precio_compra = DetallePedidos.calculatePrecioCompra(articulo, proveedor)
       return DetallePedidos.update({id:detalle.id})
         .set({
           cantidad: detalle.cantidad,

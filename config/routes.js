@@ -42,6 +42,7 @@ module.exports.routes = {
   'post /pedido/confirmar': 'PedidoController.confirmar',
   'post /detallePedidos': 'DetallePedidosController.create',
   'post /venta/confirmar': 'VentaController.confirmar',
+  'post /pedido/bulk': 'PedidoController.bulkCreate',
 
   // Login routes
   'POST /login': 'AuthController.login',

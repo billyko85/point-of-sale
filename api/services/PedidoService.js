@@ -1,3 +1,5 @@
+const reduce = require("lodash/reduce")
+
 module.exports = {
 
   getPedidoForArticulo: (articuloId, sucursalId) => Articulo.findOne(articuloId)
@@ -17,7 +19,7 @@ module.exports = {
     proveedor_id: proveedorId,
     sucursal_id: sucursalId,
     estado: "pendiente"
-  }),
+  }).fetch(),
 
   confirmPedido: (pedidoId, recibidos) => {
     return Promise.all([
@@ -73,6 +75,36 @@ module.exports = {
         })
 
     })
+  },
+
+  bulkCreate: async (sucursalId, proveedor, stocks) => {
+    
+    const existe = await Pedido.findOne({
+      sucursal_id: sucursalId,
+      proveedor_id: proveedor.id,
+      estado: {"!=": ["confirmado"]}
+    })
+
+    if(existe !== undefined) throw "Ya existe un pedido pendiente para este proveedor"
+    const pedido = await PedidoService.createPedidoForProveedor(proveedor.id, sucursalId)
+    const articulos = await Articulo.find({id: stocks.map(s => s.articulo_id)})
+
+    const detalles = reduce(stocks, (result, stock) => {
+      const det = result[stock.articulo_id] = result[stock.articulo_id] || {
+        pedido_id: pedido.id,
+        precio_compra: DetallePedidos.calculatePrecioCompra(articulos.find(art => art.id === stock.articulo_id), proveedor),
+        atributo_extra: stock.atributo_extra,
+        articulo_id: stock.articulo_id,
+        cantidad: 0
+      }
+      det.cantidad = det.cantidad + 1
+      result[stock.articulo_id] = det
+      return result
+    }, {})
+
+    await DetallePedidos.createEach(Object.values(detalles))
+    
+    return pedido
   }
 
 }

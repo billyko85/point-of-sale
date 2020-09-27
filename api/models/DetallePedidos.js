@@ -39,16 +39,7 @@ module.exports = {
     return detallePedidos.save();
   },
 
-  createMany: (detalle, amount) => {
-
-    const promises = [];
-    for(let i=0; i<amount; i++) {
-      const promise = DetallePedidos.create(detalle)
-      promises.push(promise);
-    }
-
-    return Promise.all(promises)
-  }
+  calculatePrecioCompra: (articulo, proveedor) => (articulo.precio * (1 - proveedor.porc_descuento / 100)).toFixed(2)
 
 };
 
