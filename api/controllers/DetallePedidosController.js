@@ -5,8 +5,6 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
-const DetallePedidos = require("../models/DetallePedidos");
-
 module.exports = {
 	
 
