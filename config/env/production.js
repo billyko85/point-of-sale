@@ -34,7 +34,8 @@ module.exports = {
       requestTimeout: 10 * 60 * 1000,
       pool: {
         min: 5,
-        max: 50
+        max: 50,
+        idleTimeoutMillis: 5000
       }
     }
   },

@@ -8,7 +8,7 @@ module.exports = {
         .exec((err, proveedor) => {
             if(proveedor) {
                 const query = proveedor.tablaListado.trim().replace(/^select *(distinct)?/i, (str, distinct) => `SELECT ${distinct || ""} TOP 15`);
-                sails.getDatastore().sendNativeQuery(query, [], (err, rawResult) => {
+                sails.sendNativeQuery(query, []).then(rawResult => {
                     res.setHeader('Content-Type', 'application/json');
                     res.setHeader('Access-Control-Expose-Headers', 'X-Total-Count');
                     res.setHeader('X-Total-Count', rawResult.rowsAffected[0]);
@@ -52,8 +52,8 @@ module.exports = {
                         VALUES (s.id, s.codigo_proveedor, s.marca, s.modelo, s.fabricante, s.categoria, s.descripcion, s.datos_extra, s.precio, round(s.precio * ${porcSellPrice}, 2), 1, ${proveedor.id}, getdate(), getdate());
 
                 `
-                sails.getDatastore().sendNativeQuery(query, [], (err) => {
-                    if(!err) {
+                sails.sendNativeQuery(query, []).then(rawResult => {
+                    if(!rawResult.err) { // TODO ver errores
 
                         LogService.info(`Actualizando precios de stock del proveedor ${req.body.proveedor}`)
                         const query = `
@@ -62,8 +62,8 @@ module.exports = {
                                 updatedAt = getdate()
                             WHERE proveedor_id = ${proveedor.id};
                         `
-                        sails.getDatastore().sendNativeQuery(query, [], (err) => {
-                            if(err) {
+                        sails.sendNativeQuery(query, []).then( rawResult => {
+                            if(rawResult.err) {
                                 LogService.error(`Error actualizando precios de stock del proveedor ${req.body.proveedor}`, err)
                                 res.status(500).send(`Error actualizando info del proveedor`);
                             }else {

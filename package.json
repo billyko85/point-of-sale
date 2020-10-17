@@ -53,5 +53,10 @@
     "url": "git://github.com/mpampin/point-of-sale-api-2.git"
   },
   "author": "mpampin",
-  "license": ""
+  "license": "",
+  "devDependencies": {
+    "eslint": "^7.11.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.1"
+  }
 }

@@ -21,8 +21,9 @@ module.exports.datastores = {
     },
     requestTimeout: 10 * 60 * 1000,
     pool: {
-      min: 5,
-      max: 50
+      min: 0,
+      max: 1,
+      idleTimeoutMillis: 5000
     }
   }
 

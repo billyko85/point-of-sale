@@ -64,8 +64,8 @@ module.exports = {
           sql = `${sql}; ${inserts}; COMMIT;`
           console.log(sql)
 
-          return new Promise((resolve, reject) => sails.getDatastore().sendNativeQuery(sql, [], (err) => {
-            if(!err) resolve()
+          return new Promise((resolve, reject) => sails.sendNativeQuery(sql, []).then( rawResult => {
+            if(!rawResult.err) resolve()
             else {
               LogService.error("Error en la query de confirmar pedido", err)
               reject("Error desconocido al confirmar pedido")

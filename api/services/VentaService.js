@@ -119,8 +119,8 @@ const updateDatabase = (venta, detallesCompras, detallesDevoluciones, devolucion
   
   LogService.info(sql)
 
-  return new Promise((resolve, reject) => sails.getDatastore().sendNativeQuery(sql, [], (err) => {
-    if (!err) resolve()
+  return new Promise((resolve, reject) => sails.getDatastore().sendNativeQuery(sql, []).then((rawResult) => {
+    if (!rawResult.err) resolve()
     else {
       LogService.error("Error en la query de actualizar venta", err)
       reject("Error desconocido al actualizar la venta")

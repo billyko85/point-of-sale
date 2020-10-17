@@ -1,5 +1,5 @@
 /**
- * Garantia.js
+ * Estadogarantia.js
  *
  * @description :: A model definition represents a database table/collection.
  * @docs        :: https://sailsjs.com/docs/concepts/models-and-orm/models
@@ -13,13 +13,21 @@ module.exports = {
     //  ╠═╝╠╦╝║║║║║ ║ ║╚╗╔╝║╣ ╚═╗
     //  ╩  ╩╚═╩╩ ╩╩ ╩ ╩ ╚╝ ╚═╝╚═╝
 
-    stock_id: { type: 'string' },
+    garantia_id: { type: 'number' },
 
-    proveedor_id: { type: 'string' },
+    secuencia: { type: 'number' },
 
-    detalle: { type: 'string' },
+    fecha: { 
+      type: 'ref',
+      columnType: 'datetime',
+    },
 
-    sucursal_id: { type: 'number' },
+    estado: { type: 'string' },
+
+    detalle: {
+      type: 'string',
+      allowNull: true
+    }
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
