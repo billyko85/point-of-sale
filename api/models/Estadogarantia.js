@@ -5,6 +5,8 @@
  * @docs        :: https://sailsjs.com/docs/concepts/models-and-orm/models
  */
 
+const reduce = require('lodash/reduce');
+
 module.exports = {
 
   attributes: {
