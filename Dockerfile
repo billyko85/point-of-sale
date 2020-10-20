@@ -8,8 +8,7 @@ WORKDIR /app
 
 RUN rm -rf node_modules
 RUN npm i
-RUN npm i -g sails
 
 EXPOSE 1337
 
-CMD sails lift --models.migrate='safe'
+CMD npx sails lift --models.migrate='safe'
