@@ -20,6 +20,11 @@ module.exports = {
     detalle: { type: 'string' },
 
     sucursal_id: { type: 'number' },
+    
+    garantia_reconocida: {
+      type: 'boolean',
+      allowNull: true
+    }
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
