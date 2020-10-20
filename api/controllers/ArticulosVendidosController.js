@@ -18,7 +18,7 @@ const BULK_QUERY = sort => `
     join articulo a on a.id = s.articulo_id
     where v.estado = 'confirmado'
         and v.fecha >= $1
-        and (s.proveedor_id = $2 or null is null)
+        and (s.proveedor_id = $2 or $2 is null)
         and v.sucursal_id = $3
     group by s.articulo_id,
         a.codigo_proveedor,
