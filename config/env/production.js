@@ -12,13 +12,13 @@
 
 module.exports = {
 
-  /***************************************************************************
+  /** *************************************************************************
    * Set the default database connection for models in the production        *
    * environment (see config/connections.js and config/models.js )           *
-   ***************************************************************************/
+   ************************************************************************** */
 
   models: {
-    datastore: 'default'
+    datastore: 'default',
   },
 
   datastores: {
@@ -29,30 +29,30 @@ module.exports = {
       host: 'chapadany.database.windows.net', // azure database
       database: 'chapadany_prueba1',
       options: {
-        encrypt: true   // use this for Azure databases
+        encrypt: true, // use this for Azure databases
       },
       requestTimeout: 10 * 60 * 1000,
       pool: {
-        min: 5,
+        min: 10,
         max: 50,
-        idleTimeoutMillis: 5000
-      }
-    }
+        idleTimeoutMillis: 5000,
+      },
+    },
   },
 
   sockets: {
-    onlyAllowOrigins: ["https://chapadany-web.azurewebsites.net"]
-  }
+    onlyAllowOrigins: ['https://chapadany-web.azurewebsites.net'],
+  },
 
-  /***************************************************************************
+  /** *************************************************************************
    * Set the port in the production environment to 80                        *
-   ***************************************************************************/
+   ************************************************************************** */
 
   // port: 80,
 
-  /***************************************************************************
+  /** *************************************************************************
    * Set the log level in production environment to "silent"                 *
-   ***************************************************************************/
+   ************************************************************************** */
 
   // log: {
   //   level: "silent"
