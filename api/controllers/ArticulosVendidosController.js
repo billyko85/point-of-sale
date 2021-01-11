@@ -12,7 +12,11 @@ const BULK_QUERY = (sort) => `
         s.atributo_extra,
         a.proveedor_id,
         sum(case when dv.devolucion = 1 then -1 else 1 end) sell_count,
-        (select count(*) from stock ss where ss.articulo_id = s.articulo_id and ss.disponible = 1) stock_count
+        (select count(*)
+         from stock ss
+         where ss.articulo_id = s.articulo_id
+           and ss.disponible = 1
+           and ss.sucursal_id = s.sucursal_id) stock_count
     from venta v
     join detalleventa dv on dv.venta_id = v.id
     join stock s on s.id = dv.stock_id
@@ -22,6 +26,7 @@ const BULK_QUERY = (sort) => `
         and (s.proveedor_id = $2 or $2 is null)
         and v.sucursal_id = $3
     group by s.articulo_id,
+        s.sucursal_id,
         a.codigo_proveedor,
         a.descripcion,
         a.marca,
@@ -41,7 +46,7 @@ const COUNT_QUERY = `
     join stock s on s.id = dv.stock_id
     where v.estado = 'confirmado'
         and v.fecha >= $1
-        and (s.proveedor_id = $2 or null is null)
+        and (s.proveedor_id = $2 or $2 is null)
         and v.sucursal_id = $3`;
 
 module.exports = {
