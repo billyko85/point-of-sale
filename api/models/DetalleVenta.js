@@ -9,150 +9,174 @@ module.exports = {
 
   attributes: {
 
-    venta_id: { 
+    venta_id: {
       type: 'number',
-      allowNull: true
+      allowNull: true,
     },
 
-    stock_id: { 
-      type: 'number',
-      allowNull: true
+    stock_id: {
+      type: 'string',
+      allowNull: true,
     },
 
     codigo_proveedor: {
       type: 'string',
-      allowNull: true
+      allowNull: true,
     },
 
     marca: {
       type: 'string',
-      allowNull: true
+      allowNull: true,
     },
 
     modelo: {
       type: 'string',
-      allowNull: true
+      allowNull: true,
     },
 
     fabricante: {
       type: 'string',
-      allowNull: true
+      allowNull: true,
     },
 
     descripcion: {
       type: 'string',
-      allowNull: true
+      allowNull: true,
     },
 
     atributo_extra: {
       type: 'string',
-      allowNull: true
+      allowNull: true,
     },
 
-    precio_venta: { 
+    cantidad: {
+      type: 'number',
+      allowNull: true,
+    },
+
+    precio_venta: {
       type: 'float',
-      allowNull: true
+      allowNull: true,
     },
 
-    proveedor_id : { 
+    proveedor_id: {
       type: 'number',
-      allowNull: true
+      allowNull: true,
     },
-    
-    devolucion : { type: 'boolean' },
-    
-    devolucion_id : {
+
+    devolucion: { type: 'boolean' },
+
+    devolucion_id: {
       type: 'number',
-      allowNull: true
+      allowNull: true,
     },
+
+    stock_recurrente: { type: 'boolean' },
 
   },
 
   beforeCreate: async (values, cb) => {
+    const venta = await Venta.findOne(values.venta_id);
 
-    const venta = await Venta.findOne(values.venta_id)
-    
-    if(!venta || venta.estado === "confirmado") {
-      cb({code: 404, message: 'La venta no existe o ya se encuentra confirmada.' });
-      return
+    if (!venta || venta.estado === 'confirmado') {
+      cb({ code: 404, message: 'La venta no existe o ya se encuentra confirmada.' });
+      return;
     }
 
-    if(values.stock_id) {
-      const otroDetalle = await DetalleVenta.find({ stock_id: values.stock_id, venta_id: values.venta_id })
-      
-      if(otroDetalle.length > 0) {
-        cb({ code: 403, message: 'Ese artículo ya había sido agregado a la venta'})
-        return;
-      }
-      const stock = await Stock.findOne(values.stock_id)
+    if (values.stock_id) {
+      // Si el stock id no empieza con R, es un artículo recurrente, no hay registro en stock
+      if (!values.stock_id.startsWith('R')) {
+        const otroDetalle = await DetalleVenta.find({ stock_id: values.stock_id, venta_id: values.venta_id });
 
-      if(!stock) {
-        cb({ code: 404, message:'El id no existe' });
-        return;
-      }
-      
-      const devolucion = !stock.disponible
-
-      values.codigo_proveedor = stock.codigo_proveedor
-      values.marca = stock.marca
-      values.modelo = stock.modelo
-      values.fabricante = stock.fabricante
-      values.descripcion = stock.descripcion
-      values.atributo_extra = stock.atributo_extra
-      values.precio_venta = stock.precio_venta
-      values.proveedor_id = stock.proveedor_id
-      values.devolucion = devolucion
-
-      if(values.devolucion) {
-
-        const detallesDeVentas = await DetalleVenta.find({
-          stock_id: values.stock_id,
-          devolucion: false
-        })
-      
-        if(detallesDeVentas.length === 0) {
-          cb({code: 404, message: 'No se encontró la venta original del artículo a devolver.' })
-          return
+        if (otroDetalle.length > 0) {
+          cb({ code: 403, message: 'Ese artículo ya había sido agregado a la venta' });
+          return;
         }
-        const detVenta = detallesDeVentas.pop()
-        const devId = await crearDevolucion(detVenta, venta)
+        const stock = await Stock.findOne(values.stock_id);
 
-        values.precio_venta = detVenta.precio_venta * -1
-        values.devolucion_id = devId
+        if (!stock) {
+          cb({ code: 404, message: 'El id no existe' });
+          return;
+        }
+
+        const devolucion = !stock.disponible;
+
+        values.codigo_proveedor = stock.codigo_proveedor;
+        values.marca = stock.marca;
+        values.modelo = stock.modelo;
+        values.fabricante = stock.fabricante;
+        values.descripcion = stock.descripcion;
+        values.atributo_extra = stock.atributo_extra;
+        values.precio_venta = stock.precio_venta;
+        values.proveedor_id = stock.proveedor_id;
+        values.stock_recurrente = false;
+        values.devolucion = devolucion;
+
+        if (values.devolucion) {
+          const detallesDeVentas = await DetalleVenta.find({
+            stock_id: values.stock_id,
+            devolucion: false,
+          });
+
+          if (detallesDeVentas.length === 0) {
+            cb({ code: 404, message: 'No se encontró la venta original del artículo a devolver.' });
+            return;
+          }
+          const detVenta = detallesDeVentas.pop();
+          const devId = await crearDevolucion(detVenta, venta);
+
+          values.precio_venta = detVenta.precio_venta * -1;
+          values.devolucion_id = devId;
+        }
+      } else {
+        const stock = await ListadoStock.findOne(values.stock_id.substring(1));
+
+        if (!stock) {
+          cb({ code: 404, message: 'El id no existe' });
+          return;
+        }
+
+        values.codigo_proveedor = stock.codigo_proveedor;
+        values.marca = stock.marca;
+        values.modelo = stock.modelo;
+        values.fabricante = stock.fabricante;
+        values.descripcion = stock.descripcion;
+        values.atributo_extra = stock.atributo_extra;
+        values.precio_venta = stock.precio_venta;
+        values.proveedor_id = stock.proveedor_id;
+        values.stock_recurrente = true;
+        values.devolucion = false;
       }
-      
-      cb()
 
+      values.cantidad = 1;
+      cb();
     } else {
-      values.stock_id = null
-      cb()
+      values.cantidad = 1;
+      values.stock_id = null;
+      cb();
     }
-
   },
 
   afterDestroy: async (destroyedRecord, cb) => {
-    
-    if(destroyedRecord.devolucion) {
-      await Devolucion.destroy({ id: destroyedRecord.devolucion_id })
+    if (destroyedRecord.devolucion) {
+      await Devolucion.destroy({ id: destroyedRecord.devolucion_id });
     }
-    
-    cb()
+
+    cb();
   },
 
 };
 
 const crearDevolucion = async (detalleOrig, ventaCambio) => {
+  const ventaOrig = await Venta.findOne(detalleOrig.venta_id);
 
-  const ventaOrig = await Venta.findOne(detalleOrig.venta_id)
-  
   const dev = await Devolucion.create({
     venta_inicial_id: detalleOrig.venta_id,
     venta_devolucion_id: ventaCambio.id,
     precio: detalleOrig.precio_venta,
     fecha_venta: ventaOrig.fecha,
     fecha_cambio: ventaCambio.fecha,
-  }).fetch()
+  }).fetch();
 
-  return dev.id
-
-}
+  return dev.id;
+};

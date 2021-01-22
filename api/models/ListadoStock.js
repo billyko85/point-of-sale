@@ -31,14 +31,15 @@ module.exports = {
 
     proveedor_id: { type: 'number' },
 
-    count_id: { type: 'number' },
+    disponibles: { type: 'number' },
 
-    articulo_id: { type: 'number' }
+    articulo_id: { type: 'number' },
+
+    stock_recurrente: { type: 'boolean' },
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
     //  ╚═╝╩ ╩╚═╝╚═╝═╩╝╚═╝
-
 
     //  ╔═╗╔═╗╔═╗╔═╗╔═╗╦╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
     //  ╠═╣╚═╗╚═╗║ ║║  ║╠═╣ ║ ║║ ║║║║╚═╗
@@ -47,4 +48,3 @@ module.exports = {
   },
 
 };
-

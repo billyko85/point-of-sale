@@ -9,30 +9,30 @@ module.exports = {
 
   attributes: {
 
-    fecha : {
+    fecha: {
       type: 'ref',
       columnType: 'datetime',
-      required: true
+      required: true,
     },
 
-    proveedor_id : { 
-      type: 'integer',
-      required: true
+    proveedor_id: {
+      type: 'number',
+      required: true,
     },
 
-    estado : { 
+    estado: {
       type: 'string',
-      required: true
+      required: true,
     },
 
     sucursal_id: {
-      type: 'integer', 
-      required: true 
+      type: 'number',
+      required: true,
     },
-    
+
   },
-  
-  /*beforeCreate : (pedido, cb) => {
+
+  /* beforeCreate : (pedido, cb) => {
 
     PedidoService.findPedidoPendienteForProveedor(pedido.proveedor_id, pedido.sucursal_id)
     .then((resp) => {
@@ -42,11 +42,10 @@ module.exports = {
       }
     })
 
-  },*/
+  }, */
 
   afterDestroy: (destroyedRecord, cb) => {
-    DetallePedidos.destroy({pedido_id: destroyedRecord.id}).then(() => cb())
-  }
+    DetallePedidos.destroy({ pedido_id: destroyedRecord.id }).then(() => cb());
+  },
 
 };
-

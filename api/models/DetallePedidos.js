@@ -9,29 +9,29 @@ module.exports = {
 
   attributes: {
 
-    pedido_id : { 
-      type: 'integer'
+    pedido_id: {
+      type: 'number',
     },
 
-    precio_compra: { 
+    precio_compra: {
       type: 'float',
-      required: true
+      required: true,
     },
 
     atributo_extra: { type: 'string' },
 
-    articulo_id : { 
-      type: 'integer',
-      required: true
+    articulo_id: {
+      type: 'number',
+      required: true,
     },
 
-    cantidad : { 
-      type: 'integer',
-      required: true
+    cantidad: {
+      type: 'number',
+      required: true,
     },
 
-    cantidad_recibida : { type: 'integer' }
-    
+    cantidad_recibida: { type: 'number' },
+
   },
 
   updateQuantity: (detallePedidos, cantidad) => {
@@ -39,7 +39,6 @@ module.exports = {
     return detallePedidos.save();
   },
 
-  calculatePrecioCompra: (articulo, proveedor) => (articulo.precio * (1 - proveedor.porc_descuento / 100)).toFixed(2)
+  calculatePrecioCompra: (articulo, proveedor) => (articulo.precio * (1 - proveedor.porc_descuento / 100)).toFixed(2),
 
 };
-

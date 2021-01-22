@@ -9,84 +9,86 @@ module.exports = {
 
   attributes: {
 
-    codigo_proveedor : { type: 'string' },
+    codigo_proveedor: { type: 'string' },
 
-    marca : { 
-      type: 'string', 
-      allowNull: true 
+    marca: {
+      type: 'string',
+      allowNull: true,
     },
 
-    modelo : { 
-      type: 'string', 
-      allowNull: true 
+    modelo: {
+      type: 'string',
+      allowNull: true,
     },
 
-    fabricante : { 
-      type: 'string', 
-      allowNull: true 
+    fabricante: {
+      type: 'string',
+      allowNull: true,
     },
 
-    categoria : { 
-      type: 'string', 
-      allowNull: true 
+    categoria: {
+      type: 'string',
+      allowNull: true,
     },
 
-    descripcion : { type: 'string' },
+    descripcion: { type: 'string' },
 
-    stock_min : { 
+    stock_min: {
       type: 'number',
-      allowNull: true
+      allowNull: true,
     },
 
-    datos_extra : { 
-      type: 'string', 
-      allowNull: true 
+    datos_extra: {
+      type: 'string',
+      allowNull: true,
     },
 
-    precio : { 
+    precio: {
       type: 'float',
-      required: true
+      required: true,
     },
 
-    precio_venta : { 
+    precio_venta: {
       type: 'float',
-      required: true
+      required: true,
     },
 
-    actualiza_precio : { 
+    actualiza_precio: {
       type: 'boolean',
-      required: true
+      required: true,
     },
 
-    proveedor_id : { 
-      type: 'integer',
-      required: true
+    stock_recurrente: {
+      type: 'boolean',
+      required: true,
     },
 
-    id_ref: { 
-      type: 'integer'
-    }
+    proveedor_id: {
+      type: 'number',
+      required: true,
+    },
+
+    id_ref: {
+      type: 'number',
+    },
   },
 
   afterUpdate: (updatedRecord, cb) => {
-    Stock.find({"articulo_id": updatedRecord.id})
+    Stock.find({ articulo_id: updatedRecord.id })
       .then((stocks) => {
-        if(stocks.length > 0) {
+        if (stocks.length > 0) {
           const promises = [];
-          for(let i=0; i<stocks.length; i++) {
+          for (let i = 0; i < stocks.length; i++) {
             const stock = stocks[i];
             stock.precio_venta = updatedRecord.precio_venta;
-            promises.push(stock.save())
+            promises.push(stock.save());
           }
           return Promise.all(promises);
-        }else {
-          cb();
         }
+        cb();
       }).then((err) => {
         cb();
-      })
-
-  }
+      });
+  },
 
 };
-
