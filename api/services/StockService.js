@@ -96,7 +96,7 @@ module.exports = {
             ${articulo.id},
             ${sucursalId},
             ${cantidadRecibida},
-            ${articulo.stock_recurrente ? 1 : 0}
+            ${articulo.stock_recurrente ? 1 : 0},
             SYSDATETIME(),
             SYSDATETIME()
           )`;
