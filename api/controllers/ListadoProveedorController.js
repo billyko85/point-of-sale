@@ -55,7 +55,7 @@ module.exports = {
               LogService.info(`Actualizando precios de stock del proveedor ${req.body.proveedor}`);
               const query = `
                             UPDATE stock
-                            SET precio_venta = (SELECT a.precio_venta from articulo a where a.id = stock.articulo_id),
+                            SET precio_venta = ISNULL((SELECT a.precio_venta from articulo a where a.id = stock.articulo_id), precio_venta),
                                 updatedAt = getdate()
                             WHERE proveedor_id = ${proveedor.id};
                         `;
